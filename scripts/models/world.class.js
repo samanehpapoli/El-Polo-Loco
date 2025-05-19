@@ -4,7 +4,12 @@ class World {
   character = new Character();
   enemies = [new Chicken(), new Chicken(), new Chicken(), new Chicken()];
   clouds = [new Cloud()];
-  backgrounds = [new Background("assets/img/5_background/layers/1_first_layer/1.png")];
+  backgrounds = [
+    new Background("assets/img/5_background/layers/air.png", 0),
+    new Background("assets/img/5_background/layers/3_third_layer/1.png", 0),
+    new Background("assets/img/5_background/layers/2_second_layer/1.png", 0),
+    new Background("assets/img/5_background/layers/1_first_layer/1.png", 0)
+  ];
 
   constructor(canvas) {
     this.canvas = canvas;
