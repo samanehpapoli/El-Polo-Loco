@@ -3,18 +3,15 @@ class Cloud extends MovableObject {
   y = 30;
   w = 450;
   h = 350;
+  speed = 0.15;
 
   constructor() {
     super();
     this.loadImage("assets/img/5_background/layers/4_clouds/1.png");
-   this.animate();
+    this.animate();
   }
-
-  animate(){
-    setInterval(() => {
-      this.x -= 0.15;
-    }, 1000/60);
-   
+// // Diese Funktion startet die Bewegung des Objekts nach links.
+  animate() {
+    this.moveLeft();
   }
-
 }
