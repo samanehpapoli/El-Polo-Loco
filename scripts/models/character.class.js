@@ -4,6 +4,7 @@ class Character extends MovableObject {
   w = 130;
   h = 220;
   world;
+  speed = 8;
 
   IMAGES_IDLE = [
     "assets/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -27,29 +28,43 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/2_walk/W-26.png",
   ];
 
-  currentImage = 0;
-
   constructor() {
     super();
     this.loadImage("assets/img/2_character_pepe/1_idle/idle/I-1.png");
-
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_WALK);
     this.animate();
+    this.move();
   }
- // Diese Funktion wechselt das Bild je nach Tasteneingabe zwischen Stand- und Geh-Animation alle 100 ms.
+
+  setWorld(world) {
+    this.world = world;
+  }
+
+  // Diese Funktion wechselt das Bild je nach Tasteneingabe zwischen Stand- und Geh-Animation alle 100 ms.
   animate() {
     setInterval(() => {
-      let imagesArray = this.IMAGES_IDLE;
+      if (this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true) {
+        this.playAnimation(this.IMAGES_WALK);
+      } else {
+        this.playAnimation(this.IMAGES_IDLE);
+      }
+    }, 1000 / 10);
+  }
 
-      if (this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true ) {
-        imagesArray = this.IMAGES_WALK
+  move() {
+    setInterval(() => {
+      if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition) {
+        this.x += this.speed;
+        this.otherDirection = false;
       }
 
-      let i = this.currentImage % imagesArray.length;
-      let path = imagesArray[i];
-      this.img = this.imageCache[path];
-      this.currentImage++;
-    }, 1000 / 10);
+      if (this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition) {
+        this.x -= this.speed;
+        this.otherDirection = true;
+      }
+
+      this.world.camera = -this.x + 100;
+    }, 1000 / 60);
   }
 }
