@@ -12,11 +12,22 @@ class World {
     this.ctx = this.canvas.getContext("2d");
     this.setWorld();
     this.draw();
+    this.checkCollisions();
   }
 
   setWorld() {
     this.character.setWorld(this);
     this.level.endboss.setWorld(this);
+  }
+
+  checkCollisions() {
+    setInterval(() => {
+      for (const enemy of this.level.enemies) {
+        if (this.character.isColliding(enemy)) {
+          console.log('khordam'+enemy);
+        }
+      }
+    }, 50);
   }
 
   draw() {
@@ -42,15 +53,23 @@ class World {
   }
 
   addToMap(mo) {
+    this.flipImage(mo);
+    mo.drawImage(this.ctx);
+    mo.drawFrame(this.ctx);
+    mo.drawFrameOffset(this.ctx)
+    this.flipImageBack(mo);
+  }
+
+  flipImage(mo) {
     if (mo.otherDirection) {
       this.ctx.save();
       this.ctx.translate(mo.w, 0);
       this.ctx.scale(-1, 1);
       mo.x = mo.x * -1;
     }
+  }
 
-    this.ctx.drawImage(mo.img, mo.x, mo.y, mo.w, mo.h);
-
+  flipImageBack(mo) {
     if (mo.otherDirection) {
       mo.x = mo.x * -1;
       this.ctx.restore();

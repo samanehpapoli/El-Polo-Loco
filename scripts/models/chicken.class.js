@@ -15,16 +15,21 @@ class Chicken extends MovableObject {
     this.loadImage("assets/img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALK);
     this.animate();
+    this.move();
     this.speed = 0.2 + Math.random() * 0.25;
   }
-
 
   // ChatGPT:
   // Diese Funktion bewegt das Objekt nach links und ändert alle 200 Millisekunden das Gehbild.
   animate() {
-    this.moveLeft();
     setInterval(() => {
       this.playAnimation(this.IMAGES_WALK);
     }, 1000 / 5);
+  }
+
+  move() {
+    setInterval(() => {
+      this.moveLeft();
+    }, 1000 / 60);
   }
 }

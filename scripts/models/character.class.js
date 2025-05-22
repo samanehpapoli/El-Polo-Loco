@@ -1,10 +1,19 @@
 class Character extends MovableObject {
   x = 100;
-  y = 200;
+  y = 100;
   w = 130;
   h = 220;
   world;
   speed = 8;
+  speedY = 0;
+  acceleration = 2;
+
+  offset = {
+    right: 20,
+    left: 20,
+    top: 70,
+    bottom: 10,
+  }
 
   IMAGES_IDLE = [
     "assets/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -28,24 +37,53 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/2_walk/W-26.png",
   ];
 
+  IMAGES_JUMP = [
+    "assets/img/2_character_pepe/3_jump/J-31.png",
+    "assets/img/2_character_pepe/3_jump/J-32.png",
+    "assets/img/2_character_pepe/3_jump/J-33.png",
+    "assets/img/2_character_pepe/3_jump/J-34.png",
+    "assets/img/2_character_pepe/3_jump/J-35.png",
+    "assets/img/2_character_pepe/3_jump/J-36.png",
+    "assets/img/2_character_pepe/3_jump/J-37.png",
+    "assets/img/2_character_pepe/3_jump/J-38.png",
+    "assets/img/2_character_pepe/3_jump/J-39.png",
+  ];
+
   constructor() {
     super();
-    this.loadImage("assets/img/2_character_pepe/1_idle/idle/I-1.png");
+    this.loadImage(this.IMAGES_IDLE[0]);
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_WALK);
+    this.loadImages(this.IMAGES_JUMP);
     this.animate();
     this.move();
+    this.applyGravity();
   }
 
   setWorld(world) {
     this.world = world;
   }
 
-  // Diese Funktion wechselt das Bild je nach Tasteneingabe zwischen Stand- und Geh-Animation alle 100 ms.
+  applyGravity() {
+    setInterval(() => {
+      if (this.isAboveGround() || this.speedY > 0) {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+      }
+    }, 1000 / 25);
+  }
+
+  isAboveGround() {
+    return this.y < 200;
+  }
+
+  // Spielt die passende Animation basierend auf Tasteneingabe und Position
   animate() {
     setInterval(() => {
       if (this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true) {
         this.playAnimation(this.IMAGES_WALK);
+      } else if (this.isAboveGround()) {
+        this.playAnimation(this.IMAGES_JUMP);
       } else {
         this.playAnimation(this.IMAGES_IDLE);
       }
@@ -55,13 +93,17 @@ class Character extends MovableObject {
   move() {
     setInterval(() => {
       if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition) {
-        this.x += this.speed;
+        this.moveRight();
         this.otherDirection = false;
       }
 
       if (this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition) {
-        this.x -= this.speed;
+        this.moveLeft();
         this.otherDirection = true;
+      }
+
+      if (this.world.keyboard.SPACE === true && !this.isAboveGround()) {
+        this.jump();
       }
 
       this.world.camera = -this.x + 100;
