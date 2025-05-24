@@ -25,6 +25,7 @@ class World {
       for (const enemy of this.level.enemies) {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
+          this.level.healthStatusBars.setPersentage(this.character.energy);
           console.log("charakter" + this.character.energy);
         }
       }
@@ -33,12 +34,19 @@ class World {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
     this.ctx.translate(this.camera, 0);
+
     this.addMultipleObjectToMap(this.level.backgrounds);
     this.addToMap(this.character);
     this.addToMap(this.level.endboss);
     this.addMultipleObjectToMap(this.level.enemies);
     this.addMultipleObjectToMap(this.level.clouds);
+
+    //  status bars
+    this.ctx.translate(-this.camera, 0);
+    this.addToMap(this.level.healthStatusBars);
+    this.ctx.translate(this.camera, 0);
 
     this.ctx.translate(-this.camera, 0);
 

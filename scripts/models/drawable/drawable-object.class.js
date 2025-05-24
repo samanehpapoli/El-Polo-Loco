@@ -1,13 +1,11 @@
-class MovableObject {
+class DrawableObject {
   x;
   y;
   w;
   h;
   img;
-  speed = 1;
-  otherDirection = false;
-  currentImage = 0;
 
+  currentImage = 0;
   imageCache = {};
 
   loadImage(path) {
@@ -27,6 +25,7 @@ class MovableObject {
     ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
   }
 
+  
   drawFrame(ctx) {
     if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
       ctx.beginPath();
@@ -47,31 +46,5 @@ class MovableObject {
     }
   }
 
-  isColliding(mo) {
-    return (
-      this.x + this.w - this.offset.right > mo.x &&
-      this.y + this.h - this.offset.bottom > mo.y &&
-      this.x -this.offset.left < mo.x  &&
-      this.y + this.offset.top < mo.y + mo.h 
-    );
-  }
-
-  moveRight() {
-    this.x += this.speed;
-  }
-
-  moveLeft() {
-    this.x -= this.speed;
-  }
-
-  jump() {
-    this.speedY = 25;
-  }
-
-  playAnimation(images) {
-    let i = this.currentImage % images.length;
-    let path = images[i];
-    this.img = this.imageCache[path];
-    this.currentImage++;
-  }
+ 
 }

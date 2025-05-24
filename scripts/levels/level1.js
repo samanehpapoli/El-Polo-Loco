@@ -23,4 +23,6 @@ const backgrounds = [
   new Background("assets/img/5_background/layers/1_first_layer/1.png", 719 * 2),
 ];
 
-level1 = new Level(endboss, enemies, clouds, backgrounds, -600, 1500);
+const healthStatusBars =new HealthStatusBar();
+
+level1 = new Level(endboss, enemies, clouds, backgrounds,healthStatusBars, -600, 1500);
