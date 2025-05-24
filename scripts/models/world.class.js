@@ -24,10 +24,11 @@ class World {
     setInterval(() => {
       for (const enemy of this.level.enemies) {
         if (this.character.isColliding(enemy)) {
-          console.log('khordam'+enemy);
+          this.character.hit();
+          console.log("charakter" + this.character.energy);
         }
       }
-    }, 50);
+    }, 500);
   }
 
   draw() {
@@ -56,7 +57,7 @@ class World {
     this.flipImage(mo);
     mo.drawImage(this.ctx);
     mo.drawFrame(this.ctx);
-    mo.drawFrameOffset(this.ctx)
+    mo.drawFrameOffset(this.ctx);
     this.flipImageBack(mo);
   }
 
