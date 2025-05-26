@@ -23,6 +23,20 @@ const backgrounds = [
   new Background("assets/img/5_background/layers/1_first_layer/1.png", 719 * 2),
 ];
 
-const healthStatusBars =new HealthStatusBar();
+const coins = [
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+  new Coin(),
+]
 
-level1 = new Level(endboss, enemies, clouds, backgrounds,healthStatusBars, -600, 1500);
+const healthStatusBars =new HealthStatusBar();
+const coinStatusBars =new CoinStatusBar();
+
+level1 = new Level(endboss, enemies, clouds, backgrounds,coins,healthStatusBars,coinStatusBars, -600, 1500);

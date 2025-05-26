@@ -7,6 +7,7 @@ class DrawableObject {
 
   currentImage = 0;
   imageCache = {};
+  fixInContext = false;
 
   loadImage(path) {
     this.img = new Image();
@@ -27,7 +28,7 @@ class DrawableObject {
 
   
   drawFrame(ctx) {
-    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss) {
+    if (this instanceof Character || this instanceof Chicken || this instanceof Endboss ) {
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "green";
@@ -37,7 +38,7 @@ class DrawableObject {
   }
 
   drawFrameOffset(ctx) {
-    if (this instanceof Character) {
+    if (this instanceof Character || this instanceof Coin) {
       ctx.beginPath();
       ctx.lineWidth = 2;
       ctx.strokeStyle = "red";

@@ -2,13 +2,12 @@ class MovableObject extends DrawableObject {
   speed = 1;
   otherDirection = false;
 
-
   isColliding(mo) {
     return (
-      this.x + this.w - this.offset.right > mo.x &&
-      this.y + this.h - this.offset.bottom > mo.y &&
-      this.x - this.offset.left < mo.x &&
-      this.y + this.offset.top < mo.y + mo.h
+      this.x + this.w - this.offset.right > mo.x + mo.offset.left &&
+      this.y + this.h - this.offset.bottom > mo.y + mo.offset.top &&
+      this.x + this.offset.left < mo.x + mo.w - mo.offset.right &&
+      this.y + this.offset.top < mo.y + mo.h - mo.offset.bottom
     );
   }
 

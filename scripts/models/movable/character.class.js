@@ -8,6 +8,7 @@ class Character extends MovableObject {
   speedY = 0;
   acceleration = 2;
   energy = 100;
+  coins = 0;
   lastHit;
 
   offset = {
@@ -91,6 +92,10 @@ class Character extends MovableObject {
         this.speedY -= this.acceleration;
       }
     }, 1000 / 25);
+  }
+
+  getCoin() {
+    this.coins += 10;
   }
 
   isAboveGround() {

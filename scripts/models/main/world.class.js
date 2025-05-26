@@ -26,10 +26,17 @@ class World {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
           this.level.healthStatusBars.setPersentage(this.character.energy);
-          console.log("charakter" + this.character.energy);
         }
       }
-    }, 500);
+
+      for (const coin of this.level.coins) {
+        if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
+          this.character.getCoin();
+          coin.coinIsPick();
+          this.level.coinStatusBars.setPersentage(this.character.coins);
+        }
+      }
+    }, 200);
   }
 
   draw() {
@@ -43,11 +50,14 @@ class World {
     this.addMultipleObjectToMap(this.level.enemies);
     this.addMultipleObjectToMap(this.level.clouds);
 
-    //  status bars
-    this.ctx.translate(-this.camera, 0);
-    this.addToMap(this.level.healthStatusBars);
-    this.ctx.translate(this.camera, 0);
+    // Coins
+    this.addMultipleObjectToMap(this.level.coins);
 
+    //  status bars
+
+    this.addToMap(this.level.healthStatusBars);
+    this.addToMap(this.level.coinStatusBars);
+   
     this.ctx.translate(-this.camera, 0);
 
     requestAnimationFrame(() => {
@@ -62,11 +72,19 @@ class World {
   }
 
   addToMap(mo) {
+    if (mo.fixInContext === true) {
+      this.ctx.translate(-this.camera, 0);
+    }
+
     this.flipImage(mo);
     mo.drawImage(this.ctx);
     mo.drawFrame(this.ctx);
     mo.drawFrameOffset(this.ctx);
     this.flipImageBack(mo);
+
+    if (mo.fixInContext === true) {
+       this.ctx.translate(this.camera, 0);;
+    }
   }
 
   flipImage(mo) {
