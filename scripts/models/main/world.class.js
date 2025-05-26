@@ -36,6 +36,13 @@ class World {
           this.level.coinStatusBars.setPersentage(this.character.coins);
         }
       }
+
+      for (const bottle of this.level.bottles) {
+        if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
+          console.log("bottöle greftam");
+          bottle.bottleIsPick();
+        }
+      }
     }, 200);
   }
 
@@ -53,11 +60,14 @@ class World {
     // Coins
     this.addMultipleObjectToMap(this.level.coins);
 
+    // Bottle
+    this.addMultipleObjectToMap(this.level.bottles);
+
     //  status bars
 
     this.addToMap(this.level.healthStatusBars);
     this.addToMap(this.level.coinStatusBars);
-   
+
     this.ctx.translate(-this.camera, 0);
 
     requestAnimationFrame(() => {
@@ -83,7 +93,7 @@ class World {
     this.flipImageBack(mo);
 
     if (mo.fixInContext === true) {
-       this.ctx.translate(this.camera, 0);;
+      this.ctx.translate(this.camera, 0);
     }
   }
 
