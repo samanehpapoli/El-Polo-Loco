@@ -18,6 +18,12 @@ class World {
   setWorld() {
     this.character.setWorld(this);
     this.level.endboss.setWorld(this);
+      for (const bottle of this.level.bottles) {
+        bottle.setWorld(this);
+      }
+      for (const coin of this.level.coins) {
+        coin.setWorld(this);
+      }
   }
 
   checkCollisions() {
@@ -25,22 +31,25 @@ class World {
       for (const enemy of this.level.enemies) {
         if (this.character.isColliding(enemy)) {
           this.character.hit();
-          this.level.healthStatusBars.setPersentage(this.character.energy);
+          this.level.healthStatusBar.setPersentage(this.character.energy);
         }
       }
 
       for (const coin of this.level.coins) {
         if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
-          this.character.getCoin();
+          let coinsToAdded =100 / this.level.coins.length;
+          this.character.getCoin(coinsToAdded);
           coin.coinIsPick();
-          this.level.coinStatusBars.setPersentage(this.character.coins);
+          this.level.coinStatusBar.setPersentage(this.character.coins);
         }
       }
 
       for (const bottle of this.level.bottles) {
         if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
-          console.log("bottöle greftam");
+         let bottlesToAdded =100 / this.level.bottles.length;
+         this.character.getBottle(bottlesToAdded);
           bottle.bottleIsPick();
+          this.level.bottleStatusBar.setPersentage(this.character.bottles);
         }
       }
     }, 200);
@@ -65,8 +74,9 @@ class World {
 
     //  status bars
 
-    this.addToMap(this.level.healthStatusBars);
-    this.addToMap(this.level.coinStatusBars);
+    this.addToMap(this.level.healthStatusBar);
+    this.addToMap(this.level.coinStatusBar);
+    this.addToMap(this.level.bottleStatusBar);
 
     this.ctx.translate(-this.camera, 0);
 

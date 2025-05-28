@@ -1,8 +1,8 @@
 class Bottle extends DrawableObject {
-  x = 400 + Math.random() * 1200;
   y = 360;
   w = 60;
   h = 60;
+  world;
 
   offset = {
     right: 20,
@@ -20,6 +20,12 @@ class Bottle extends DrawableObject {
     let randomImageIndex = Math.floor(Math.random() * 2);
     this.loadImage(this.IMAGES[0]);
     this.loadImages(this.IMAGES);
+  }
+
+  setWorld(world) {
+    this.world = world;
+    let maximumPosition = this.world.level.gameEndPosition - this.world.level.endboss.w;
+    this.x = 400 + Math.random() * maximumPosition;
   }
 
   bottleIsPick() {

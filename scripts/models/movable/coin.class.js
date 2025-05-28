@@ -1,8 +1,8 @@
 class Coin extends MovableObject {
-  x = 300 + Math.random() * 1200;
   y = 140;
   w = 100;
   h = 100;
+  world;
 
   offset = {
     right: 30,
@@ -20,6 +20,12 @@ class Coin extends MovableObject {
     this.loadImage(this.IMAGES[0]);
     this.loadImages(this.IMAGES);
     this.animate();
+  }
+
+  setWorld(world) {
+    this.world = world;
+    let maximumPosition = this.world.level.gameEndPosition - this.world.level.endboss.w;
+    this.x = 400 + Math.random() * maximumPosition;
   }
 
   animate() {

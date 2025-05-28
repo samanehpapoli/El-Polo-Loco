@@ -9,6 +9,7 @@ class Character extends MovableObject {
   acceleration = 2;
   energy = 100;
   coins = 0;
+  bottles = 0;
   lastHit;
 
   offset = {
@@ -94,8 +95,12 @@ class Character extends MovableObject {
     }, 1000 / 25);
   }
 
-  getCoin() {
-    this.coins += 10;
+  getCoin(coinsToAdded) {
+    this.coins += coinsToAdded;
+  }
+
+  getBottle(bottlesToAdded) {
+    this.bottles += bottlesToAdded;
   }
 
   isAboveGround() {
