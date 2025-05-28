@@ -1,5 +1,16 @@
 const endboss = new Endboss();
-const enemies = [new Chicken(), new Chicken(), new Chicken(), new Chicken()];
+const enemies = [
+  new Morgh(),
+  new Morgh(),
+  new Morgh(),
+  new Morgh(),
+  new Morgh(),
+  new Jooje(),
+  new Jooje(),
+  new Jooje(),
+  new Jooje(),
+  new Jooje(),
+];
 const clouds = [new Cloud()];
 const backgrounds = [
   new Background("assets/img/5_background/layers/air.png", -719),

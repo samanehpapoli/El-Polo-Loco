@@ -130,6 +130,14 @@ class Character extends MovableObject {
     return this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true;
   }
 
+  isKillEnemy(mo) {
+    const horizontalOverlap =
+      this.x + this.w - this.offset.right > mo.x + mo.offset.left && this.x + this.offset.left < mo.x + mo.w - mo.offset.right;
+    const heightDifferent = mo.y + mo.h - mo.offset.bottom - (this.y + this.h - this.offset.bottom);
+    const isPushing = heightDifferent < 60 && heightDifferent > 30;
+    return horizontalOverlap && isPushing && !this.world.keyboard.SPACE && mo.energy > 0;
+  }
+
   // Spielt die passende Animation basierend auf Tasteneingabe und Position
   animate() {
     setInterval(() => {
@@ -171,5 +179,14 @@ class Character extends MovableObject {
 
       this.world.camera = -this.x + 100;
     }, 1000 / 60);
+  }
+
+  checkKillEnemy() {
+    for (const enemy of this.world.level.enemies) {
+      if (this.isKillEnemy(enemy)) {
+        enemy.energy = 0;
+        console.log("kill enemy");
+      }
+    }
   }
 }

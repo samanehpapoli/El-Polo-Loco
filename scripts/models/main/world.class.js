@@ -13,23 +13,27 @@ class World {
     this.setWorld();
     this.draw();
     this.checkCollisions();
+    this.gameInterval();
   }
 
   setWorld() {
     this.character.setWorld(this);
     this.level.endboss.setWorld(this);
-      for (const bottle of this.level.bottles) {
-        bottle.setWorld(this);
-      }
-      for (const coin of this.level.coins) {
-        coin.setWorld(this);
-      }
+    for (const enemy of this.level.enemies) {
+      enemy.setWorld(this);
+    }
+    for (const bottle of this.level.bottles) {
+      bottle.setWorld(this);
+    }
+    for (const coin of this.level.coins) {
+      coin.setWorld(this);
+    }
   }
 
   checkCollisions() {
     setInterval(() => {
       for (const enemy of this.level.enemies) {
-        if (this.character.isColliding(enemy)) {
+        if (this.character.isColliding(enemy) && enemy.energy > 0) {
           this.character.hit();
           this.level.healthStatusBar.setPersentage(this.character.energy);
         }
@@ -37,7 +41,7 @@ class World {
 
       for (const coin of this.level.coins) {
         if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
-          let coinsToAdded =100 / this.level.coins.length;
+          let coinsToAdded = 100 / this.level.coins.length;
           this.character.getCoin(coinsToAdded);
           coin.coinIsPick();
           this.level.coinStatusBar.setPersentage(this.character.coins);
@@ -46,13 +50,19 @@ class World {
 
       for (const bottle of this.level.bottles) {
         if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
-         let bottlesToAdded =100 / this.level.bottles.length;
-         this.character.getBottle(bottlesToAdded);
+          let bottlesToAdded = 100 / this.level.bottles.length;
+          this.character.getBottle(bottlesToAdded);
           bottle.bottleIsPick();
           this.level.bottleStatusBar.setPersentage(this.character.bottles);
         }
       }
     }, 200);
+  }
+
+  gameInterval() {
+    setInterval(() => {
+      this.character.checkKillEnemy();
+    }, 10);
   }
 
   draw() {
