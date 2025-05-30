@@ -5,12 +5,13 @@ class Character extends MovableObject {
   h = 220;
   world;
   speed = 8;
-  speedY = 0;
-  acceleration = 2;
   energy = 100;
   coins = 0;
   bottles = 0;
   lastHit;
+  canThrowBottle = true;
+  coinsToAdded = 0;
+  bottlesToAdded = 0;
 
   offset = {
     right: 20,
@@ -84,27 +85,16 @@ class Character extends MovableObject {
 
   setWorld(world) {
     this.world = world;
+    this.coinsToAdded = 100 / this.world.level.coins.length;
+    this.bottlesToAdded = 100 / this.world.level.bottles.length;
   }
 
-  applyGravity() {
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
+  getCoin() {
+    this.coins += this.coinsToAdded;
   }
 
-  getCoin(coinsToAdded) {
-    this.coins += coinsToAdded;
-  }
-
-  getBottle(bottlesToAdded) {
-    this.bottles += bottlesToAdded;
-  }
-
-  isAboveGround() {
-    return this.y < 200;
+  getBottle() {
+    this.bottles += this.bottlesToAdded;
   }
 
   hit() {
@@ -175,6 +165,18 @@ class Character extends MovableObject {
 
       if (this.world.keyboard.SPACE === true && !this.isAboveGround()) {
         this.jump();
+      }
+
+      if (this.world.keyboard.ENTER === true && this.bottles > 0 && this.canThrowBottle) {
+        this.canThrowBottle = false;
+        const throwableObject = new ThrowableObject();
+        throwableObject.throw(this.x + 50);
+        this.world.level.throwableObjects.push(throwableObject);
+        this.bottles-=this.bottlesToAdded;
+         this.world.level.bottleStatusBar.setPersentage(this.bottles);
+        setTimeout(() => {
+          this.canThrowBottle = true;
+        }, 1000);
       }
 
       this.world.camera = -this.x + 100;

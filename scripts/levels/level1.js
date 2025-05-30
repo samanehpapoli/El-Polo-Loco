@@ -56,6 +56,7 @@ const coins = [
 ];
 
 const bottles = [new Bottle(), new Bottle(), new Bottle(), new Bottle(), new Bottle(), new Bottle()];
+const throwableObjects= [];
 
 const healthStatusBar = new HealthStatusBar();
 const coinStatusBar = new CoinStatusBar();
@@ -68,6 +69,7 @@ level1 = new Level(
   backgrounds,
   coins,
   bottles,
+  throwableObjects,
   healthStatusBar,
   coinStatusBar,
   bottleStatusBar,

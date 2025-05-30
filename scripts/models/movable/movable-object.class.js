@@ -1,5 +1,7 @@
 class MovableObject extends DrawableObject {
   speed = 1;
+  speedY = 0;
+  acceleration = 2;
   otherDirection = false;
 
   isColliding(mo) {
@@ -9,6 +11,23 @@ class MovableObject extends DrawableObject {
       this.x + this.offset.left < mo.x + mo.w - mo.offset.right &&
       this.y + this.offset.top < mo.y + mo.h - mo.offset.bottom
     );
+  }
+
+  applyGravity() {
+    setInterval(() => {
+      if (this.isAboveGround() || this.speedY > 0) {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+      }
+    }, 1000 / 25);
+  }
+
+  isAboveGround() {
+    if (this instanceof ThrowableObject) {
+      return true;
+    } else {
+      return this.y < 200;
+    }
   }
 
   moveRight() {

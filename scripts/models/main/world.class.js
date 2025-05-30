@@ -41,8 +41,7 @@ class World {
 
       for (const coin of this.level.coins) {
         if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
-          let coinsToAdded = 100 / this.level.coins.length;
-          this.character.getCoin(coinsToAdded);
+          this.character.getCoin();
           coin.coinIsPick();
           this.level.coinStatusBar.setPersentage(this.character.coins);
         }
@@ -50,10 +49,15 @@ class World {
 
       for (const bottle of this.level.bottles) {
         if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
-          let bottlesToAdded = 100 / this.level.bottles.length;
-          this.character.getBottle(bottlesToAdded);
+          this.character.getBottle();
           bottle.bottleIsPick();
           this.level.bottleStatusBar.setPersentage(this.character.bottles);
+        }
+      }
+
+      for (const throwableObject of this.level.throwableObjects) {
+        if (this.level.endboss.isColliding(throwableObject) ) {
+          throwableObject.splash();
         }
       }
     }, 200);
@@ -81,6 +85,9 @@ class World {
 
     // Bottle
     this.addMultipleObjectToMap(this.level.bottles);
+
+    // ThrowableObject
+    this.addMultipleObjectToMap(this.level.throwableObjects);
 
     //  status bars
 
