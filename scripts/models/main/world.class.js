@@ -33,7 +33,7 @@ class World {
   checkCollisions() {
     setInterval(() => {
       for (const enemy of this.level.enemies) {
-        if (this.character.isColliding(enemy) && enemy.energy > 0) {
+        if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isDead()) {
           this.character.hit();
           this.level.healthStatusBar.setPersentage(this.character.energy);
         }
@@ -56,8 +56,10 @@ class World {
       }
 
       for (const throwableObject of this.level.throwableObjects) {
-        if (this.level.endboss.isColliding(throwableObject) ) {
+        if (this.level.endboss.isColliding(throwableObject) && throwableObject.isSplash === false) {
           throwableObject.splash();
+          this.level.endboss.hit();
+          this.level.endbossStatusBar.setPersentage(this.level.endboss.energy);
         }
       }
     }, 200);
@@ -66,6 +68,7 @@ class World {
   gameInterval() {
     setInterval(() => {
       this.character.checkKillEnemy();
+      this.character.reachToDangerArea();
     }, 10);
   }
 
@@ -75,25 +78,26 @@ class World {
     this.ctx.translate(this.camera, 0);
 
     this.addMultipleObjectToMap(this.level.backgrounds);
-    this.addToMap(this.character);
-    this.addToMap(this.level.endboss);
-    this.addMultipleObjectToMap(this.level.enemies);
-    this.addMultipleObjectToMap(this.level.clouds);
 
     // Coins
     this.addMultipleObjectToMap(this.level.coins);
 
     // Bottle
     this.addMultipleObjectToMap(this.level.bottles);
+    
+    this.addMultipleObjectToMap(this.level.enemies);
+    this.addMultipleObjectToMap(this.level.clouds);
+    this.addToMap(this.level.endboss);
+    this.addToMap(this.character);
 
-    // ThrowableObject
+    // Throwable
     this.addMultipleObjectToMap(this.level.throwableObjects);
 
     //  status bars
-
     this.addToMap(this.level.healthStatusBar);
     this.addToMap(this.level.coinStatusBar);
     this.addToMap(this.level.bottleStatusBar);
+    this.addToMap(this.level.endbossStatusBar);
 
     this.ctx.translate(-this.camera, 0);
 
@@ -115,8 +119,8 @@ class World {
 
     this.flipImage(mo);
     mo.drawImage(this.ctx);
-    mo.drawFrame(this.ctx);
-    mo.drawFrameOffset(this.ctx);
+    // mo.drawFrame(this.ctx);
+    // mo.drawFrameOffset(this.ctx);
     this.flipImageBack(mo);
 
     if (mo.fixInContext === true) {

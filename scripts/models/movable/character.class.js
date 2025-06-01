@@ -8,10 +8,11 @@ class Character extends MovableObject {
   energy = 100;
   coins = 0;
   bottles = 0;
-  lastHit;
   canThrowBottle = true;
   coinsToAdded = 0;
   bottlesToAdded = 0;
+  energyToRemove = 5;
+  reachedToDangerArea = false;
 
   offset = {
     right: 20,
@@ -67,7 +68,6 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/5_dead/D-54.png",
     "assets/img/2_character_pepe/5_dead/D-55.png",
     "assets/img/2_character_pepe/5_dead/D-56.png",
-    "assets/img/2_character_pepe/5_dead/D-57.png",
   ];
 
   constructor() {
@@ -97,25 +97,6 @@ class Character extends MovableObject {
     this.bottles += this.bottlesToAdded;
   }
 
-  hit() {
-    this.energy -= 5;
-    if (this.energy < 0) {
-      this.energy = 0;
-    } else {
-      this.lastHit = new Date().getTime();
-    }
-  }
-
-  isHurt() {
-    let timePassed = new Date().getTime() - this.lastHit; //In miliseconds
-    timePassed = timePassed / 1000; //In seconds
-    return timePassed < 1;
-  }
-
-  isDead() {
-    return this.energy === 0;
-  }
-
   isMoving() {
     return this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true;
   }
@@ -128,12 +109,19 @@ class Character extends MovableObject {
     return horizontalOverlap && isPushing && !this.world.keyboard.SPACE && mo.energy > 0;
   }
 
+  reachToDangerArea() {
+    if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea ) {
+      this.reachedToDangerArea = true;
+      this.world.level.endboss.moving = true;
+    }
+  }
+
   // Spielt die passende Animation basierend auf Tasteneingabe und Position
   animate() {
     setInterval(() => {
       switch (true) {
         case this.isDead():
-          this.playAnimation(this.IMAGES_DEAD);
+          this.playAnimation(this.IMAGES_DEAD, true);
           break;
         case this.isHurt():
           this.playAnimation(this.IMAGES_HURT);
@@ -172,10 +160,16 @@ class Character extends MovableObject {
         const throwableObject = new ThrowableObject();
         throwableObject.throw(this.x + 50);
         this.world.level.throwableObjects.push(throwableObject);
-        this.bottles-=this.bottlesToAdded;
-         this.world.level.bottleStatusBar.setPersentage(this.bottles);
+        this.bottles -= this.bottlesToAdded;
+        this.world.level.bottleStatusBar.setPersentage(this.bottles);
         setTimeout(() => {
           this.canThrowBottle = true;
+        }, 1000);
+      }
+
+      if (this.isDead()) {
+        setTimeout(() => {
+          this.y += 10;
         }, 1000);
       }
 
@@ -187,7 +181,6 @@ class Character extends MovableObject {
     for (const enemy of this.world.level.enemies) {
       if (this.isKillEnemy(enemy)) {
         enemy.energy = 0;
-        console.log("kill enemy");
       }
     }
   }

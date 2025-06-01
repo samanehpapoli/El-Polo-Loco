@@ -9,8 +9,10 @@ class Level {
   healthStatusBar;
   coinStatusBar;
   bottleStatusBar;
+  endbossStatusBar;
   gameStartPosition;
   gameEndPosition;
+  gameDangerArea;
 
   constructor(
     endboss,
@@ -23,8 +25,10 @@ class Level {
     healthStatusBar,
     coinStatusBar,
     bottleStatusBar,
+    endbossStatusBar,
     gameStartPosition,
-    gameEndPosition
+    gameEndPosition,
+    gameDangerArea
   ) {
     this.endboss = endboss;
     this.enemies = enemies;
@@ -36,7 +40,9 @@ class Level {
     this.healthStatusBar = healthStatusBar;
     this.coinStatusBar = coinStatusBar;
     this.bottleStatusBar = bottleStatusBar;
+    this.endbossStatusBar = endbossStatusBar;
     this.gameStartPosition = gameStartPosition;
     this.gameEndPosition = gameEndPosition;
+    this.gameDangerArea = gameDangerArea;
   }
 }
