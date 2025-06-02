@@ -4,8 +4,11 @@ class Endboss extends MovableObject {
   h = 350;
   world;
   energy = 100;
+  speed = 2;
   energyToRemove = 0;
   moving = false;
+  lastAttack;
+  movingDirection = "left";
 
   offset = {
     right: 60,
@@ -23,6 +26,17 @@ class Endboss extends MovableObject {
     "assets/img/4_enemie_boss_chicken/2_alert/G10.png",
     "assets/img/4_enemie_boss_chicken/2_alert/G11.png",
     "assets/img/4_enemie_boss_chicken/2_alert/G12.png",
+  ];
+
+  IMAGES_ATTACK = [
+    "  assets/img/4_enemie_boss_chicken/3_attack/G13.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G14.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G15.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G16.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G17.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G18.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G19.png",
+    "  assets/img/4_enemie_boss_chicken/3_attack/G20.png",
   ];
 
   IMAGES_HURT = [
@@ -48,6 +62,7 @@ class Endboss extends MovableObject {
     this.loadImage(this.IMAGES_ALERT[0]);
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_ALERT);
+    this.loadImages(this.IMAGES_ATTACK);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
     this.animate();
@@ -62,6 +77,16 @@ class Endboss extends MovableObject {
 
   isMoving() {
     return this.moving;
+  }
+
+  attack() {
+    this.lastAttack = new Date().getTime();
+  }
+
+  isAttacking() {
+    let timePassed = new Date().getTime() - this.lastAttack; //In miliseconds
+    timePassed = timePassed / 1000; //In seconds
+    return timePassed < 1;
   }
 
   animate() {
@@ -81,6 +106,14 @@ class Endboss extends MovableObject {
           }, 500);
           break;
 
+        case this.isAttacking():
+          this.moving = false;
+          this.playAnimation(this.IMAGES_ATTACK);
+          setInterval(() => {
+            this.moving = true;
+          }, 1000);
+          break;
+
         case this.isMoving():
           this.playAnimation(this.IMAGES_WALK);
           break;
@@ -94,12 +127,20 @@ class Endboss extends MovableObject {
   move() {
     setInterval(() => {
       if (this.isMoving()) {
-        if (this.world.character.x - (this.x + this.w)>200) {
+        if (this.world.character.x + this.world.character.w < this.x) {
+          this.movingDirection = "left";
+        }
+
+        if (this.x + this.w < this.world.character.x) {
+          this.movingDirection = "right";
+        }
+
+        if (this.movingDirection === "right") {
           this.moveRight();
-          this.otherDirection = false;
+          this.otherDirection = true;
         } else {
           this.moveLeft();
-           this.otherDirection = false;
+          this.otherDirection = false;
         }
       }
     }, 1000 / 60);

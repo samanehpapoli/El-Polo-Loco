@@ -1,4 +1,4 @@
-class Jooje extends Chicken {
+class Chick extends Chicken {
   y = 385;
   w = 30;
   h = 30;

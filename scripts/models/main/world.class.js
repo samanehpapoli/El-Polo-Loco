@@ -32,6 +32,12 @@ class World {
 
   checkCollisions() {
     setInterval(() => {
+      if (this.character.isColliding(this.level.endboss) && this.level.endboss.energy > 0 && !this.character.isDead()) {
+        this.character.hit();
+        this.level.endboss.attack();
+        this.level.healthStatusBar.setPersentage(this.character.energy);
+      }
+
       for (const enemy of this.level.enemies) {
         if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isDead()) {
           this.character.hit();
@@ -84,7 +90,7 @@ class World {
 
     // Bottle
     this.addMultipleObjectToMap(this.level.bottles);
-    
+
     this.addMultipleObjectToMap(this.level.enemies);
     this.addMultipleObjectToMap(this.level.clouds);
     this.addToMap(this.level.endboss);

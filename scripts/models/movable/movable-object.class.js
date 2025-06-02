@@ -5,6 +5,7 @@ class MovableObject extends DrawableObject {
   otherDirection = false;
   lastHit;
   dead = false;
+  lastMove = new Date().getTime();
 
   isColliding(mo) {
     return (
@@ -38,7 +39,7 @@ class MovableObject extends DrawableObject {
     if (this.energy < 0) {
       this.dead = true;
       this.energy = 0;
-      this.currentImage =0;
+      this.currentImage = 0;
     } else {
       this.lastHit = new Date().getTime();
     }
@@ -56,14 +57,17 @@ class MovableObject extends DrawableObject {
 
   moveRight() {
     this.x += this.speed;
+    this.lastMove = new Date().getTime();
   }
 
   moveLeft() {
     this.x -= this.speed;
+    this.lastMove = new Date().getTime();
   }
 
   jump() {
     this.speedY = 25;
+    this.lastMove = new Date().getTime();
   }
 
   playAnimation(images, oneTime = false) {
@@ -73,7 +77,7 @@ class MovableObject extends DrawableObject {
     if (!oneTime) {
       this.currentImage++;
     } else {
-      if (this.currentImage !== images.length -1) {
+      if (this.currentImage !== images.length - 1) {
         this.currentImage++;
       }
     }

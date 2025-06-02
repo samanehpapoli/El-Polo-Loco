@@ -34,6 +34,19 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  IMAGES_LONG_IDLE = [
+    "assets/img/2_character_pepe/1_idle/long_idle/I-11.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-12.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-13.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-14.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-15.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-16.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-17.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-18.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-19.png",
+    "assets/img/2_character_pepe/1_idle/long_idle/I-20.png",
+  ];
+
   IMAGES_WALK = [
     "assets/img/2_character_pepe/2_walk/W-21.png",
     "assets/img/2_character_pepe/2_walk/W-22.png",
@@ -74,6 +87,7 @@ class Character extends MovableObject {
     super();
     this.loadImage(this.IMAGES_IDLE[0]);
     this.loadImages(this.IMAGES_IDLE);
+    this.loadImages(this.IMAGES_LONG_IDLE);
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_JUMP);
     this.loadImages(this.IMAGES_HURT);
@@ -110,10 +124,16 @@ class Character extends MovableObject {
   }
 
   reachToDangerArea() {
-    if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea ) {
+    if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea) {
       this.reachedToDangerArea = true;
       this.world.level.endboss.moving = true;
     }
+  }
+
+  isSleeping() {
+    let timePassed = new Date().getTime() - this.lastMove; //In miliseconds
+    timePassed = timePassed / 1000; //In seconds
+    return timePassed > 7;
   }
 
   // Spielt die passende Animation basierend auf Tasteneingabe und Position
@@ -132,6 +152,9 @@ class Character extends MovableObject {
         case this.isMoving():
           this.playAnimation(this.IMAGES_WALK);
           break;
+        case this.isSleeping():
+          this.playAnimation(this.IMAGES_LONG_IDLE);
+          break;
         default:
           this.playAnimation(this.IMAGES_IDLE);
           break;
@@ -141,7 +164,7 @@ class Character extends MovableObject {
 
   move() {
     setInterval(() => {
-      if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition) {
+      if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500) {
         this.moveRight();
         this.otherDirection = false;
       }
@@ -159,6 +182,7 @@ class Character extends MovableObject {
         this.canThrowBottle = false;
         const throwableObject = new ThrowableObject();
         throwableObject.throw(this.x + 50);
+        throwableObject.setWorld(this.world);
         this.world.level.throwableObjects.push(throwableObject);
         this.bottles -= this.bottlesToAdded;
         this.world.level.bottleStatusBar.setPersentage(this.bottles);
@@ -173,7 +197,9 @@ class Character extends MovableObject {
         }, 1000);
       }
 
-      this.world.camera = -this.x + 100;
+      if (this.x < this.world.level.gameEndPosition) {
+        this.world.camera = -this.x + 100;
+      }
     }, 1000 / 60);
   }
 

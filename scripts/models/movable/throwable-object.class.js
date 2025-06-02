@@ -3,6 +3,7 @@ class ThrowableObject extends MovableObject {
   y = 330;
   w = 60;
   h = 60;
+  world;
 
   offset = {
     right: 0,
@@ -37,6 +38,10 @@ class ThrowableObject extends MovableObject {
     this.animate();
   }
 
+  setWorld(world) {
+    this.world = world;
+  }
+
   animate() {
     setInterval(() => {
       if (this.isSplash) {
@@ -53,7 +58,11 @@ class ThrowableObject extends MovableObject {
     this.applyGravity();
     setInterval(() => {
       if (this.isSplash === false) {
-        this.x += 6;
+        if (this.world.level.endboss.movingDirection === "left") {
+          this.x += 6;
+        } else {
+          this.x -= 6;
+        }
       }
     }, 20);
   }

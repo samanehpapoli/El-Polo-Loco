@@ -1,4 +1,4 @@
-class Morgh extends Chicken {
+class Hen extends Chicken {
   y = 355;
   w = 60;
   h = 60;

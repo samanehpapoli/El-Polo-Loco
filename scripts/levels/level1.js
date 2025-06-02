@@ -1,61 +1,25 @@
 const endboss = new Endboss();
-const enemies = [
-  new Morgh(),
-  new Morgh(),
-  new Morgh(),
-  new Morgh(),
-  new Morgh(),
-  new Jooje(),
-  new Jooje(),
-  new Jooje(),
-  new Jooje(),
-  new Jooje(),
-];
-const clouds = [new Cloud()];
-const backgrounds = [
-  new Background("assets/img/5_background/layers/air.png", -719),
-  new Background("assets/img/5_background/layers/3_third_layer/2.png", -719),
-  new Background("assets/img/5_background/layers/2_second_layer/2.png", -719),
-  new Background("assets/img/5_background/layers/1_first_layer/2.png", -719),
 
-  new Background("assets/img/5_background/layers/air.png", 0),
-  new Background("assets/img/5_background/layers/3_third_layer/1.png", 0),
-  new Background("assets/img/5_background/layers/2_second_layer/1.png", 0),
-  new Background("assets/img/5_background/layers/1_first_layer/1.png", 0),
+let enemies=[];
+for (let i = 1; i <= HENS_COUNT; i++) {
+  enemies.push(new Hen());
+}
+for (let i = 1; i <= CHICKS_COUNT; i++) {
+  enemies.push(new Chick());
+}
 
-  new Background("assets/img/5_background/layers/air.png", 719),
-  new Background("assets/img/5_background/layers/3_third_layer/2.png", 719),
-  new Background("assets/img/5_background/layers/2_second_layer/2.png", 719),
-  new Background("assets/img/5_background/layers/1_first_layer/2.png", 719),
+let coins = [];
 
-  new Background("assets/img/5_background/layers/air.png", 719 * 2),
-  new Background("assets/img/5_background/layers/3_third_layer/1.png", 719 * 2),
-  new Background("assets/img/5_background/layers/2_second_layer/1.png", 719 * 2),
-  new Background("assets/img/5_background/layers/1_first_layer/1.png", 719 * 2),
+for (let i = 1; i <= COINS_COUNT; i++) {
+  coins.push(new Coin());
+}
 
-  new Background("assets/img/5_background/layers/air.png", 719 * 3),
-  new Background("assets/img/5_background/layers/3_third_layer/2.png", 719 * 3),
-  new Background("assets/img/5_background/layers/2_second_layer/2.png", 719 * 3),
-  new Background("assets/img/5_background/layers/1_first_layer/2.png", 719 * 3),
-];
+let bottles = [];
 
-const coins = [
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-  new Coin(),
-];
+for (let i = 1; i <= BOTTLE_COUNT; i++) {
+  bottles.push(new Bottle());
+}
 
-const bottles = [new Bottle(), new Bottle(), new Bottle(), new Bottle(), new Bottle(), new Bottle()];
 const throwableObjects = [];
 
 const healthStatusBar = new HealthStatusBar();
@@ -75,7 +39,7 @@ level1 = new Level(
   coinStatusBar,
   bottleStatusBar,
   endbossStatusBar,
-  1 * -719 + 100,
-  3 * 719,
-  2 * 719
+  GAME_LEFT_SCREEN_COUNT * -719 + 110,
+  GAME_RIGHT_SCREEN_COUNT * 719,
+  GAME_RIGHT_SCREEN_COUNT - 1 * 719
 );
