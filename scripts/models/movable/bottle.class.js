@@ -1,8 +1,7 @@
-class Bottle extends DrawableObject {
+class Bottle extends MovableObject {
   y = 360;
   w = 60;
   h = 60;
-  world;
 
   offset = {
     right: 20,
@@ -17,8 +16,8 @@ class Bottle extends DrawableObject {
 
   constructor() {
     super();
-    let randomImageIndex = Math.floor(Math.random() * 2);
-    this.loadImage(this.IMAGES[randomImageIndex]);
+    let imageIndex = this.getRandomImageIndex(2);
+    this.loadImage(this.IMAGES[imageIndex]);
     this.loadImages(this.IMAGES);
   }
 
@@ -30,13 +29,16 @@ class Bottle extends DrawableObject {
 
   bottleIsPick() {
     this.pick = true;
-    setInterval(() => {
-      this.y -= 2;
-      setTimeout(() => {
-        this.w = 0;
-        this.h = 0;
-      }, 70);
-    }, 1);
+
+    this.intervals.push(
+      setInterval(() => {
+        this.y -= 2;
+        setTimeout(() => {
+          this.w = 0;
+          this.h = 0;
+        }, 70);
+      }, 1)
+    );
   }
 
   checkBottleIsNotPicked() {

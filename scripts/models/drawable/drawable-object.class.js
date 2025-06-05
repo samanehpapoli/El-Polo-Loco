@@ -22,6 +22,10 @@ class DrawableObject {
     }
   }
 
+  getRandomImageIndex (ImagesCount){
+    return Math.floor(Math.random() * ImagesCount);
+  }
+
   drawImage(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.w, this.h);
   }

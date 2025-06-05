@@ -3,7 +3,6 @@ class Character extends MovableObject {
   y = 100;
   w = 130;
   h = 220;
-  world;
   speed = 8;
   energy = 100;
   coins = 0;
@@ -86,15 +85,19 @@ class Character extends MovableObject {
   constructor() {
     super();
     this.loadImage(this.IMAGES_IDLE[0]);
+    this.loadAllImages();
+    this.animate();
+    this.move();
+    this.applyGravity();
+  }
+
+  loadAllImages() {
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_JUMP);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
-    this.animate();
-    this.move();
-    this.applyGravity();
   }
 
   setWorld(world) {
@@ -138,69 +141,73 @@ class Character extends MovableObject {
 
   // Spielt die passende Animation basierend auf Tasteneingabe und Position
   animate() {
-    setInterval(() => {
-      switch (true) {
-        case this.isDead():
-          this.playAnimation(this.IMAGES_DEAD, true);
-          break;
-        case this.isHurt():
-          this.playAnimation(this.IMAGES_HURT);
-          break;
-        case this.isAboveGround():
-          this.playAnimation(this.IMAGES_JUMP);
-          break;
-        case this.isMoving():
-          this.playAnimation(this.IMAGES_WALK);
-          break;
-        case this.isSleeping():
-          this.playAnimation(this.IMAGES_LONG_IDLE);
-          break;
-        default:
-          this.playAnimation(this.IMAGES_IDLE);
-          break;
-      }
-    }, 1000 / 10);
+    this.intervals.push(
+      setInterval(() => {
+        switch (true) {
+          case this.isDead():
+            this.playAnimation(this.IMAGES_DEAD, true);
+            break;
+          case this.isHurt():
+            this.playAnimation(this.IMAGES_HURT);
+            break;
+          case this.isAboveGround():
+            this.playAnimation(this.IMAGES_JUMP);
+            break;
+          case this.isMoving():
+            this.playAnimation(this.IMAGES_WALK);
+            break;
+          case this.isSleeping():
+            this.playAnimation(this.IMAGES_LONG_IDLE);
+            break;
+          default:
+            this.playAnimation(this.IMAGES_IDLE);
+            break;
+        }
+      }, 1000 / 10)
+    );
   }
 
   move() {
-    setInterval(() => {
-      if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500) {
-        this.moveRight();
-        this.otherDirection = false;
-      }
+    this.intervals.push(
+      setInterval(() => {
+        if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500) {
+          this.moveRight();
+          this.otherDirection = false;
+        }
 
-      if (this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition) {
-        this.moveLeft();
-        this.otherDirection = true;
-      }
+        if (this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition) {
+          this.moveLeft();
+          this.otherDirection = true;
+        }
 
-      if (this.world.keyboard.SPACE === true && !this.isAboveGround()) {
-        this.jump();
-      }
+        if (this.world.keyboard.SPACE === true && !this.isAboveGround()) {
+          this.jump();
+        }
 
-      if (this.world.keyboard.ENTER === true && this.bottles > 0 && this.canThrowBottle) {
-        this.canThrowBottle = false;
-        const throwableObject = new ThrowableObject();
-        throwableObject.throw(this.x + 50);
-        throwableObject.setWorld(this.world);
-        this.world.level.throwableObjects.push(throwableObject);
-        this.bottles -= this.bottlesToAdded;
-        this.world.level.bottleStatusBar.setPersentage(this.bottles);
-        setTimeout(() => {
-          this.canThrowBottle = true;
-        }, 1000);
-      }
+        if (this.world.keyboard.ENTER === true && this.bottles > 0 && this.canThrowBottle) {
+          this.canThrowBottle = false;
+          const throwableObject = new ThrowableObject();
+          throwableObject.throw(this.x + 50);
+          throwableObject.setWorld(this.world);
+          this.world.level.throwableObjects.push(throwableObject);
+          this.bottles -= this.bottlesToAdded;
+          this.world.level.bottleStatusBar.setPersentage(this.bottles);
+          setTimeout(() => {
+            this.canThrowBottle = true;
+          }, 1000);
+        }
 
-      if (this.isDead()) {
-        setTimeout(() => {
-          this.y += 10;
-        }, 1000);
-      }
+        if (this.isDead()) {
+          setTimeout(() => {
+            this.y += 10;
+          }, 1000);
+        }
 
-      if (this.x < this.world.level.gameEndPosition) {
-        this.world.camera = -this.x + 100;
-      }
-    }, 1000 / 60);
+        if (this.x < this.world.level.gameEndPosition) {
+          this.world.camera = -this.x + 100;
+        }
+      }, 1000 / 60)
+    );
   }
 
   checkKillEnemy() {

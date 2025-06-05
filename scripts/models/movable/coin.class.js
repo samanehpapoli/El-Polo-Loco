@@ -2,7 +2,6 @@ class Coin extends MovableObject {
   y = 140;
   w = 100;
   h = 100;
-  world;
 
   offset = {
     right: 30,
@@ -29,21 +28,24 @@ class Coin extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      this.playAnimation(this.IMAGES);
-    }, 1000 / 5);
+    this.intervals.push(
+      setInterval(() => {
+        this.playAnimation(this.IMAGES);
+      }, 1000 / 5)
+    );
   }
 
   coinIsPick() {
     this.pick = true;
-
-    setInterval(() => {
-      if (this.w > 0) {
-        this.y--;
-        this.w--;
-        this.h--;
-      }
-    }, 0.5);
+    this.intervals.push(
+      setInterval(() => {
+        if (this.w > 0) {
+          this.y--;
+          this.w--;
+          this.h--;
+        }
+      }, 0.5)
+    );
   }
 
   checkCoinIsNotPicked() {

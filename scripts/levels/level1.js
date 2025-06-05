@@ -1,6 +1,6 @@
 const endboss = new Endboss();
 
-let enemies=[];
+let enemies = [];
 for (let i = 1; i <= HENS_COUNT; i++) {
   enemies.push(new Hen());
 }
@@ -41,5 +41,5 @@ level1 = new Level(
   endbossStatusBar,
   GAME_LEFT_SCREEN_COUNT * -719 + 110,
   GAME_RIGHT_SCREEN_COUNT * 719,
-  GAME_RIGHT_SCREEN_COUNT - 1 * 719
+  (GAME_RIGHT_SCREEN_COUNT - 1) * 719
 );

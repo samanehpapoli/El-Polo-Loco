@@ -3,7 +3,6 @@ class ThrowableObject extends MovableObject {
   y = 330;
   w = 60;
   h = 60;
-  world;
 
   offset = {
     right: 0,
@@ -43,28 +42,32 @@ class ThrowableObject extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      if (this.isSplash) {
-        this.playAnimation(this.IMAGES_SPLASH);
-      } else {
-        this.playAnimation(this.IMAGES_ROTATE);
-      }
-    }, 1000 / 20);
+    this.intervals.push(
+      setInterval(() => {
+        if (this.isSplash) {
+          this.playAnimation(this.IMAGES_SPLASH);
+        } else {
+          this.playAnimation(this.IMAGES_ROTATE);
+        }
+      }, 1000 / 20)
+    );
   }
 
   throw(x) {
     this.x = x;
     this.speedY = 30;
     this.applyGravity();
-    setInterval(() => {
-      if (this.isSplash === false) {
-        if (this.world.level.endboss.movingDirection === "left") {
-          this.x += 6;
-        } else {
-          this.x -= 6;
+    this.intervals.push(
+      setInterval(() => {
+        if (this.isSplash === false) {
+          if (this.world.level.endboss.movingDirection === "left") {
+            this.x += 6;
+          } else {
+            this.x -= 6;
+          }
         }
-      }
-    }, 20);
+      }, 20)
+    );
   }
 
   splash() {

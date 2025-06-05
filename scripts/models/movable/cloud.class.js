@@ -9,15 +9,21 @@ class Cloud extends MovableObject {
   constructor(x) {
     super();
     this.x = x;
-    let randomImageIndex = Math.floor(Math.random() * 2);
-    this.loadImage(this.IMAGES[randomImageIndex]);
+    let imageIndex = this.getRandomImageIndex(2);
+    this.loadImage(this.IMAGES[imageIndex]);
     this.loadImages(this.IMAGES);
     this.move();
   }
 
+  setWorld(world) {
+    this.world = world;
+  }
+
   move() {
-    setInterval(() => {
-      this.moveLeft();
-    }, 1000 / 60);
+    this.intervals.push(
+      setInterval(() => {
+        this.moveLeft();
+      }, 1000 / 60)
+    );
   }
 }

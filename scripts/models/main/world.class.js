@@ -5,6 +5,7 @@ class World {
   keyboard;
   character = new Character();
   level = level1;
+  intervals = [];
 
   constructor(canvas, keyboard) {
     this.canvas = canvas;
@@ -28,54 +29,61 @@ class World {
     for (const coin of this.level.coins) {
       coin.setWorld(this);
     }
+    for (const cloud of this.level.clouds) {
+      cloud.setWorld(this);
+    }
   }
 
   checkCollisions() {
-    setInterval(() => {
-      if (this.character.isColliding(this.level.endboss) && this.level.endboss.energy > 0 && !this.character.isDead()) {
-        this.character.hit();
-        this.level.endboss.attack();
-        this.level.healthStatusBar.setPersentage(this.character.energy);
-      }
-
-      for (const enemy of this.level.enemies) {
-        if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isDead()) {
+    this.intervals.push(
+      setInterval(() => {
+        if (this.character.isColliding(this.level.endboss) && this.level.endboss.energy > 0 && !this.character.isDead()) {
           this.character.hit();
+          this.level.endboss.attack();
           this.level.healthStatusBar.setPersentage(this.character.energy);
         }
-      }
 
-      for (const coin of this.level.coins) {
-        if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
-          this.character.getCoin();
-          coin.coinIsPick();
-          this.level.coinStatusBar.setPersentage(this.character.coins);
+        for (const enemy of this.level.enemies) {
+          if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isDead()) {
+            this.character.hit();
+            this.level.healthStatusBar.setPersentage(this.character.energy);
+          }
         }
-      }
 
-      for (const bottle of this.level.bottles) {
-        if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
-          this.character.getBottle();
-          bottle.bottleIsPick();
-          this.level.bottleStatusBar.setPersentage(this.character.bottles);
+        for (const coin of this.level.coins) {
+          if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
+            this.character.getCoin();
+            coin.coinIsPick();
+            this.level.coinStatusBar.setPersentage(this.character.coins);
+          }
         }
-      }
 
-      for (const throwableObject of this.level.throwableObjects) {
-        if (this.level.endboss.isColliding(throwableObject) && throwableObject.isSplash === false) {
-          throwableObject.splash();
-          this.level.endboss.hit();
-          this.level.endbossStatusBar.setPersentage(this.level.endboss.energy);
+        for (const bottle of this.level.bottles) {
+          if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
+            this.character.getBottle();
+            bottle.bottleIsPick();
+            this.level.bottleStatusBar.setPersentage(this.character.bottles);
+          }
         }
-      }
-    }, 200);
+
+        for (const throwableObject of this.level.throwableObjects) {
+          if (this.level.endboss.isColliding(throwableObject) && throwableObject.isSplash === false) {
+            throwableObject.splash();
+            this.level.endboss.hit();
+            this.level.endbossStatusBar.setPersentage(this.level.endboss.energy);
+          }
+        }
+      }, 200)
+    );
   }
 
   gameInterval() {
-    setInterval(() => {
-      this.character.checkKillEnemy();
-      this.character.reachToDangerArea();
-    }, 10);
+    this.intervals.push(
+      setInterval(() => {
+        this.character.checkKillEnemy();
+        this.character.reachToDangerArea();
+      }, 10)
+    );
   }
 
   draw() {

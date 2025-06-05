@@ -2,7 +2,6 @@ class Endboss extends MovableObject {
   y = 90;
   w = 300;
   h = 350;
-  world;
   energy = 100;
   speed = 2;
   energyToRemove = 0;
@@ -60,13 +59,17 @@ class Endboss extends MovableObject {
   constructor() {
     super();
     this.loadImage(this.IMAGES_ALERT[0]);
+    this.loadAllImages();
+    this.animate();
+    this.move();
+  }
+
+  loadAllImages() {
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_ALERT);
     this.loadImages(this.IMAGES_ATTACK);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
-    this.animate();
-    this.move();
   }
 
   setWorld(world) {
@@ -90,59 +93,63 @@ class Endboss extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      switch (true) {
-        case this.isDead():
-          this.playAnimation(this.IMAGES_DEAD);
-          this.moving = false;
-          this.y += 40;
-          break;
+    this.intervals.push(
+      setInterval(() => {
+        switch (true) {
+          case this.isDead():
+            this.playAnimation(this.IMAGES_DEAD);
+            this.moving = false;
+            this.y += 40;
+            break;
 
-        case this.isHurt():
-          this.moving = false;
-          this.playAnimation(this.IMAGES_HURT);
-          setInterval(() => {
-            this.moving = true;
-          }, 500);
-          break;
+          case this.isHurt():
+            this.moving = false;
+            this.playAnimation(this.IMAGES_HURT);
+            setInterval(() => {
+              this.moving = true;
+            }, 500);
+            break;
 
-        case this.isAttacking():
-          this.moving = false;
-          this.playAnimation(this.IMAGES_ATTACK);
-          setInterval(() => {
-            this.moving = true;
-          }, 1000);
-          break;
+          case this.isAttacking():
+            this.moving = false;
+            this.playAnimation(this.IMAGES_ATTACK);
+            setInterval(() => {
+              this.moving = true;
+            }, 1000);
+            break;
 
-        case this.isMoving():
-          this.playAnimation(this.IMAGES_WALK);
-          break;
+          case this.isMoving():
+            this.playAnimation(this.IMAGES_WALK);
+            break;
 
-        default:
-          this.playAnimation(this.IMAGES_ALERT);
-          break;
-      }
-    }, 1000 / 6);
+          default:
+            this.playAnimation(this.IMAGES_ALERT);
+            break;
+        }
+      }, 1000 / 6)
+    );
   }
   move() {
-    setInterval(() => {
-      if (this.isMoving()) {
-        if (this.world.character.x + this.world.character.w < this.x) {
-          this.movingDirection = "left";
-        }
+    this.intervals.push(
+      setInterval(() => {
+        if (this.isMoving()) {
+          if (this.world.character.x + this.world.character.w < this.x) {
+            this.movingDirection = "left";
+          }
 
-        if (this.x + this.w < this.world.character.x) {
-          this.movingDirection = "right";
-        }
+          if (this.x + this.w < this.world.character.x) {
+            this.movingDirection = "right";
+          }
 
-        if (this.movingDirection === "right") {
-          this.moveRight();
-          this.otherDirection = true;
-        } else {
-          this.moveLeft();
-          this.otherDirection = false;
+          if (this.movingDirection === "right") {
+            this.moveRight();
+            this.otherDirection = true;
+          } else {
+            this.moveLeft();
+            this.otherDirection = false;
+          }
         }
-      }
-    }, 1000 / 60);
+      }, 1000 / 60)
+    );
   }
 }

@@ -4,8 +4,15 @@ class MovableObject extends DrawableObject {
   acceleration = 2;
   otherDirection = false;
   lastHit;
+  world;
   dead = false;
   lastMove = new Date().getTime();
+  intervals;
+
+  constructor() {
+    super();
+    this.intervals = [];
+  }
 
   isColliding(mo) {
     return (
@@ -16,13 +23,22 @@ class MovableObject extends DrawableObject {
     );
   }
 
+  /*
+   * Starte einen wiederholten Timer, der 25-mal pro Sekunde ausgeführt wird.
+   * Prüfe, ob sich das Objekt über dem Boden befindet oder sich nach oben bewegt.
+   * Wenn ja, bewege das Objekt entsprechend seiner vertikalen Geschwindigkeit nach unten.
+   * Verringere die vertikale Geschwindigkeit, um die Wirkung der Schwerkraft zu simulieren.
+   * Dadurch fällt das Objekt immer schneller nach unten, solange es nicht den Boden erreicht hat.
+   */
   applyGravity() {
-    setInterval(() => {
-      if (this.isAboveGround() || this.speedY > 0) {
-        this.y -= this.speedY;
-        this.speedY -= this.acceleration;
-      }
-    }, 1000 / 25);
+    this.intervals.push(
+      setInterval(() => {
+        if (this.isAboveGround() || this.speedY > 0) {
+          this.y -= this.speedY;
+          this.speedY -= this.acceleration;
+        }
+      }, 1000 / 25)
+    );
   }
 
   isAboveGround() {
@@ -81,5 +97,10 @@ class MovableObject extends DrawableObject {
         this.currentImage++;
       }
     }
+  }
+
+  clearAllInterval() {
+    this.intervals.forEach((id) => clearAllInterval(id));
+    this.intervals = [];
   }
 }
