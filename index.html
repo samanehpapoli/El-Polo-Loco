@@ -32,6 +32,22 @@
     <script src="./scripts/game.js"></script>
   </head>
   <body onload="init()">
-    <canvas id="canvas" width="720" height="480"></canvas>
+    <div class="game-container">
+      <div class="start-icons" id="start-icons">
+        <div class="start-game" onclick="startNewGame()">
+          <span>Start </span>
+        </div>
+        <div class="help">
+          <span>Help</span>
+        </div>
+        <div class="imprint">
+          <span>Imprint</span>
+        </div>
+      </div>
+      <div class="start-screen d-none" id="start-screen">
+          </div>
+          <div class="gameover-screen d-none" id="gameover-screen"></div>
+      <canvas id="canvas" width="720" height="480" class="d-none"></canvas>
+    </div>
   </body>
 </html>

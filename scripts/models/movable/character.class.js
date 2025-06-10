@@ -133,6 +133,15 @@ class Character extends MovableObject {
     }
   }
 
+  checkCharacterIsDead(){
+    if (this.isDead()) {
+      setTimeout(() => {
+        this.world.gameover = true;
+      },2000);
+    }
+
+  }
+
   isSleeping() {
     let timePassed = new Date().getTime() - this.lastMove; //In miliseconds
     timePassed = timePassed / 1000; //In seconds

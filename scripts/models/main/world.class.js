@@ -6,6 +6,7 @@ class World {
   character = new Character();
   level = level1;
   intervals = [];
+  gameover = false;
 
   constructor(canvas, keyboard) {
     this.canvas = canvas;
@@ -82,6 +83,7 @@ class World {
       setInterval(() => {
         this.character.checkKillEnemy();
         this.character.reachToDangerArea();
+        this.character.checkCharacterIsDead();
       }, 10)
     );
   }
@@ -93,25 +95,27 @@ class World {
 
     this.addMultipleObjectToMap(this.level.backgrounds);
 
-    // Coins
-    this.addMultipleObjectToMap(this.level.coins);
-
-    // Bottle
-    this.addMultipleObjectToMap(this.level.bottles);
-
-    this.addMultipleObjectToMap(this.level.enemies);
-    this.addMultipleObjectToMap(this.level.clouds);
-    this.addToMap(this.level.endboss);
-    this.addToMap(this.character);
-
-    // Throwable
-    this.addMultipleObjectToMap(this.level.throwableObjects);
-
-    //  status bars
-    this.addToMap(this.level.healthStatusBar);
-    this.addToMap(this.level.coinStatusBar);
-    this.addToMap(this.level.bottleStatusBar);
-    this.addToMap(this.level.endbossStatusBar);
+    if (!this.gameover) {
+      // Coins
+      this.addMultipleObjectToMap(this.level.coins);
+      // Bottle
+      this.addMultipleObjectToMap(this.level.bottles);
+      // Enemies
+      this.addMultipleObjectToMap(this.level.enemies);
+      // Clouds
+      this.addMultipleObjectToMap(this.level.clouds);
+      // Endboss
+      this.addToMap(this.level.endboss);
+      // Charater
+      this.addToMap(this.character);
+      // Throwable
+      this.addMultipleObjectToMap(this.level.throwableObjects);
+      //  status bars
+      this.addToMap(this.level.healthStatusBar);
+      this.addToMap(this.level.coinStatusBar);
+      this.addToMap(this.level.bottleStatusBar);
+      this.addToMap(this.level.endbossStatusBar);
+    }
 
     this.ctx.translate(-this.camera, 0);
 

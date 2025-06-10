@@ -1,13 +1,194 @@
-*{
-    margin: 0;
-    padding: 0;
+* {
+  margin: 0;
+  padding: 0;
 }
-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #ffffff url("../assets/icon/background.jpg") center;
+  background-size: cover;
+  backdrop-filter: blur(2px);
 }
-canvas{
-    background: black;
+
+
+.start-icons {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 85px;
+  padding: 40px;
+}
+
+.start-icons > div {
+  width: 120px;
+  height: 120px;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* متن زیر آیکون */
+.start-icons > div span {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  transition: transform 0.3s ease;
+}
+
+/* فقط متن حرکت کنه موقع هاور */
+.start-icons > div:hover span {
+  transform: translateX(-50%) translateY(-150px);
+}
+
+/* تصویر آیکون‌ها */
+.start-game {
+  background-image: url("../assets/icon/saloon.png");
+}
+.start-game:hover {
+  background-image: url("../assets/icon/saloon1.png");
+}
+
+.help {
+  background-image: url("../assets/icon/signboard.png");
+}
+.help:hover {
+  background-image: url("../assets/icon/signboard1.png");
+}
+
+.imprint {
+  background-image: url("../assets/icon/woods-wheel.png");
+}
+.imprint:hover {
+  background-image: url("../assets/icon/woods-wheel1.png");
+}
+
+/* 
+.start-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 85px;
+}
+
+.start-icons .help {
+  width: 120px;
+  height: 120px;
+  background-image: url("../assets/icon/signboard.png");
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.start-icons .help:hover {
+  background-image: url("../assets/icon/signboard1.png");
+}
+
+.start-icons .help span {
+  position: absolute;
+  top :160px;
+   transition: transform 0.3s ease;
+ 
+}
+
+.start-icons .help:hover span {
+  bottom: auto;
+  top: -30px;
+}
+
+.start-icons .start-game {
+  width: 120px;
+  height: 120px;
+  background-image: url("../assets/icon/saloon.png");
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.start-icons .start-game:hover {
+      width: 100px;
+  height: 100px;
+  background-image: url("../assets/icon/saloon1.png");
+}
+
+.start-icons .start-game span {
+  position: absolute;
+ top :160px;
+  transition: bottom 0.3s ease;
+}
+
+.start-icons .start-game:hover span {
+  bottom: auto;
+  top: -30px;
+}
+
+.start-icons .imprint {
+  width: 100px;
+  height: 100px;
+  background-image: url("../assets/icon/woods-wheel.png");
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.start-icons .imprint:hover {
+  background-image: url("../assets/icon/woods-wheel1.png");
+}
+
+.start-icons .imprint span {
+   position: absolute;
+ top: -160px;
+  transition: bottom 0.3s ease;
+}
+
+.start-icons .imprint:hover span {
+  bottom: auto;
+  top: -30px;
+} */
+
+.start-screen {
+    object-fit: cover;
+    width: 720px;
+    height: 480px;
+    background-image:url('../assets/img/9_intro_outro_screens/start/startscreen_1.png') ;
+    background-size: cover;
+    background-position: center;
+}
+
+.gameover-screen {
+    object-fit: cover;
+    width: 720px;
+    height: 480px;
+    background-image:url('../assets/img/9_intro_outro_screens/game_over/game\ over.png') ;
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+
+}
+
+canvas {
+  background: black;
+}
+
+.d-none{
+    display: none;
 }
