@@ -1,6 +1,13 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'zabars', 'Times New Roman', Times, serif;
+  letter-spacing: 2px;
+}
+
+@font-face {
+  font-family: "zabars";
+  src: url("../assets/fonts/zabars.regular.ttf") format("truetype");
 }
 
 body {
@@ -8,11 +15,37 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #ffffff url("../assets/icon/background.jpg") center;
+  background: #ffffff url("../assets/background/1.jpg") center;
   background-size: cover;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(0px);
 }
 
+.responsive-message {
+  display: none;
+  position: absolute;
+  background: #ffffff;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.responsive-message p {
+  font-size: 32px;
+  color: #000000;
+}
+
+.game-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 720px;
+  height: 480px;
+}
 
 .start-icons {
   display: flex;
@@ -22,9 +55,9 @@ body {
   padding: 40px;
 }
 
-.start-icons > div {
-  width: 120px;
-  height: 120px;
+.start-icons>div {
+  width: 150px;
+  height: 150px;
   background-position: center;
   background-size: cover;
   cursor: pointer;
@@ -34,27 +67,26 @@ body {
   align-items: center;
 }
 
-/* متن زیر آیکون */
-.start-icons > div span {
+.start-icons>div span {
   position: absolute;
-  bottom: -25px;
+  bottom: -40px;
   left: 50%;
   transform: translateX(-50%) translateY(0);
-  font-size: 16px;
+  font-size: 25px;
   font-weight: bold;
-  color: #333;
+  color: #ffffff;
   transition: transform 0.3s ease;
+  text-shadow: 0px 0px 7px #000000;
 }
 
-/* فقط متن حرکت کنه موقع هاور */
-.start-icons > div:hover span {
-  transform: translateX(-50%) translateY(-150px);
+.start-icons>div:hover span {
+  transform: translateX(-50%) translateY(-200px);
 }
 
-/* تصویر آیکون‌ها */
 .start-game {
   background-image: url("../assets/icon/saloon.png");
 }
+
 .start-game:hover {
   background-image: url("../assets/icon/saloon1.png");
 }
@@ -62,6 +94,7 @@ body {
 .help {
   background-image: url("../assets/icon/signboard.png");
 }
+
 .help:hover {
   background-image: url("../assets/icon/signboard1.png");
 }
@@ -69,126 +102,174 @@ body {
 .imprint {
   background-image: url("../assets/icon/woods-wheel.png");
 }
+
 .imprint:hover {
   background-image: url("../assets/icon/woods-wheel1.png");
 }
 
-/* 
-.start-icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 85px;
-}
-
-.start-icons .help {
-  width: 120px;
-  height: 120px;
-  background-image: url("../assets/icon/signboard.png");
-  background-position: center;
-  background-size: cover;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.start-icons .help:hover {
-  background-image: url("../assets/icon/signboard1.png");
-}
-
-.start-icons .help span {
-  position: absolute;
-  top :160px;
-   transition: transform 0.3s ease;
- 
-}
-
-.start-icons .help:hover span {
-  bottom: auto;
-  top: -30px;
-}
-
-.start-icons .start-game {
-  width: 120px;
-  height: 120px;
-  background-image: url("../assets/icon/saloon.png");
-  background-position: center;
-  background-size: cover;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.start-icons .start-game:hover {
-      width: 100px;
-  height: 100px;
-  background-image: url("../assets/icon/saloon1.png");
-}
-
-.start-icons .start-game span {
-  position: absolute;
- top :160px;
-  transition: bottom 0.3s ease;
-}
-
-.start-icons .start-game:hover span {
-  bottom: auto;
-  top: -30px;
-}
-
-.start-icons .imprint {
-  width: 100px;
-  height: 100px;
-  background-image: url("../assets/icon/woods-wheel.png");
-  background-position: center;
-  background-size: cover;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.start-icons .imprint:hover {
-  background-image: url("../assets/icon/woods-wheel1.png");
-}
-
-.start-icons .imprint span {
-   position: absolute;
- top: -160px;
-  transition: bottom 0.3s ease;
-}
-
-.start-icons .imprint:hover span {
-  bottom: auto;
-  top: -30px;
-} */
-
 .start-screen {
-    object-fit: cover;
-    width: 720px;
-    height: 480px;
-    background-image:url('../assets/img/9_intro_outro_screens/start/startscreen_1.png') ;
-    background-size: cover;
-    background-position: center;
+  object-fit: cover;
+  width: 100%;
+  height: 480px;
+  background-image: url('../assets/img/9_intro_outro_screens/start/startscreen_1.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.gameover-screen,
+.gamewin-screen {
+  object-fit: cover;
+  width: 100%;
+  height: 480px;
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  font-size: 35px;
+  gap: 50px;
+}
+
+.gameover-screen>div,
+.gamewin-screen>div {
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-top: 50px;
+}
+
+.gameover-screen>div:hover,
+.gamewin-screen>div:hover {
+  filter: drop-shadow(0 0 5px rgba(250, 250, 250, 0.8));
 }
 
 .gameover-screen {
-    object-fit: cover;
-    width: 720px;
-    height: 480px;
-    background-image:url('../assets/img/9_intro_outro_screens/game_over/game\ over.png') ;
-    background-size: cover;
-    background-position: center;
-    position: absolute;
+  background-image: url('../assets/img/9_intro_outro_screens/game_over/game-over.png');
+}
 
+.gamewin-screen {
+  background-image: url('../assets/img/9_intro_outro_screens/game_win/you-win.png');
+}
+
+.help-screen,
+.imprint-screen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgb(0 0 0 / 75%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  color: white;
+  text-align: center;
+}
+
+.help-screen h2,
+.imprint-screen h2 {
+  font-size: 50px;
+}
+
+.help-screen .buttoms {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.help-screen .buttoms>div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 22px;
+}
+
+.imprint-screen p {
+  font-size: 25px;
+}
+
+.ps-button {
+  display: flex;
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: white;
+  background: radial-gradient(circle at 30% 30%, #3a3a3a, #000000);
+  box-shadow: 0 0 10px rgb(255 244 59), inset 0 0 10px rgba(255, 255, 255, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  justify-content: center;
+  align-items: center;
+}
+
+.ps-button:hover {
+  box-shadow:
+    0 0 15px rgb(255, 227, 104),
+    inset 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.ps-button:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 0 5px rgba(0, 255, 51, 0.8),
+    inset 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.ps-button img {
+  width: 20px;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+}
+
+.close img {
+  width: 30px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.close img:hover {
+  filter: drop-shadow(0 0 5px rgba(250, 250, 250, 0.8));
+}
+
+.game-screen .sound {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.game-screen .touch-bottons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.game-screen .touch-bottons>div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 }
 
 canvas {
   background: black;
 }
 
-.d-none{
-    display: none;
+.d-none {
+  display: none;
 }

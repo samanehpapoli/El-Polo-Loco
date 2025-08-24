@@ -9,9 +9,10 @@ class CoinStatusBar extends StatusBar {
     "assets/img/7_statusbars/1_statusbar/1_statusbar_coin/green/60.png",
     "assets/img/7_statusbars/1_statusbar/1_statusbar_coin/green/80.png",
     "assets/img/7_statusbars/1_statusbar/1_statusbar_coin/green/100.png",
-   
+
   ];
 
+  // Constructor: initialize the object with its images
   constructor() {
     super();
     this.loadImage(this.IMAGES[0]);

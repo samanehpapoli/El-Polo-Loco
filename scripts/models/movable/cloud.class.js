@@ -6,6 +6,8 @@ class Cloud extends MovableObject {
 
   IMAGES = ["assets/img/5_background/layers/4_clouds/1.png", "assets/img/5_background/layers/4_clouds/2.png"];
 
+  // Constructor: initialize the object at a given X position and start movement
+  // @param {number} x - Initial X position
   constructor(x) {
     super();
     this.x = x;
@@ -15,10 +17,13 @@ class Cloud extends MovableObject {
     this.move();
   }
 
+  // Set the game world reference
+  // @param {Object} world - The game world object
   setWorld(world) {
     this.world = world;
   }
 
+  // Start moving the object to the left continuously
   move() {
     this.intervals.push(
       setInterval(() => {

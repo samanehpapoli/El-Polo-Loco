@@ -10,10 +10,20 @@ class Hen extends Chicken {
 
   IMAGES_DEAD = ["assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
+  DEAD_SOUND;
+
+  // Constructor: initialize the object with walking and dead images, and sounds
   constructor() {
     super();
     this.loadImage(this.IMAGES_WALK[0]);
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_DEAD);
+    this.setSounds();
+  }
+
+  // Set up the dead sound effect for the character
+  setSounds() {
+    this.DEAD_SOUND = new Audio("assets/sounds/hen-dead.mp3");
+    this.DEAD_SOUND.volume = 0.1;
   }
 }

@@ -56,6 +56,8 @@ class Endboss extends MovableObject {
     "assets/img/4_enemie_boss_chicken/1_walk/G3.png",
     "assets/img/4_enemie_boss_chicken/1_walk/G4.png",
   ];
+
+  // Constructor: initialize the endboss with images, animation, and movement
   constructor() {
     super();
     this.loadImage(this.IMAGES_ALERT[0]);
@@ -64,6 +66,7 @@ class Endboss extends MovableObject {
     this.move();
   }
 
+  // Preload all relevant images for the endboss
   loadAllImages() {
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_ALERT);
@@ -72,56 +75,84 @@ class Endboss extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
   }
 
+  // Set the game world reference and initial position
+  // @param {Object} world - The game world object
   setWorld(world) {
     this.world = world;
     this.x = this.world.level.gameEndPosition + 300;
     this.energyToRemove = 100 / (this.world.level.bottles.length - 2);
   }
 
+  // Check if the endboss is currently moving
+  // @return {boolean} true if moving
   isMoving() {
     return this.moving;
   }
 
+  // Record the time of the last attack
   attack() {
     this.lastAttack = new Date().getTime();
   }
 
+  // Check if the endboss is attacking within the last 1 second
+  // @return {boolean} true if attacking
   isAttacking() {
     let timePassed = new Date().getTime() - this.lastAttack; //In miliseconds
     timePassed = timePassed / 1000; //In seconds
     return timePassed < 1;
   }
 
+  // Check if the endboss is dead and trigger game win after delay
+  checkEndBossIsDead() {
+    if (this.isDead()) {
+      setTimeout(() => {
+        this.world.gameWin = true;
+      }, 2000);
+    }
+  }
+
+  // Play the dead animation and stop movement
+  playDeadAnimation() {
+    this.playAnimation(this.IMAGES_DEAD);
+    this.moving = false;
+    this.y += 40;
+  }
+
+  // Play the hurt animation and temporarily stop movement
+  playHurtAnimation() {
+    this.moving = false;
+    this.playAnimation(this.IMAGES_HURT);
+    setInterval(() => {
+      this.moving = true;
+    }, 500);
+  }
+
+  // Play the attack animation and temporarily stop movement
+  playAttackAnimation() {
+    this.moving = false;
+    this.playAnimation(this.IMAGES_ATTACK);
+    setInterval(() => {
+      this.moving = true;
+    }, 1000);
+  }
+
+  // Animate the endboss based on its state
   animate() {
     this.intervals.push(
       setInterval(() => {
         switch (true) {
           case this.isDead():
-            this.playAnimation(this.IMAGES_DEAD);
-            this.moving = false;
-            this.y += 40;
+            this.playDeadAnimation();
             break;
-
           case this.isHurt():
-            this.moving = false;
-            this.playAnimation(this.IMAGES_HURT);
-            setInterval(() => {
-              this.moving = true;
-            }, 500);
+            this.playHurtAnimation();
             break;
-
           case this.isAttacking():
-            this.moving = false;
-            this.playAnimation(this.IMAGES_ATTACK);
-            setInterval(() => {
-              this.moving = true;
-            }, 1000);
+            this.playAttackAnimation();
             break;
-
           case this.isMoving():
             this.playAnimation(this.IMAGES_WALK);
             break;
-
           default:
             this.playAnimation(this.IMAGES_ALERT);
             break;
@@ -129,27 +160,48 @@ class Endboss extends MovableObject {
       }, 1000 / 6)
     );
   }
+
+  // Decide if the endboss should move left towards the player
+  checkShouldMoveLeft() {
+    if (this.world.character.x + this.world.character.w < this.x) {
+      this.movingDirection = "left";
+    }
+  }
+
+  // Decide if the endboss should move right towards the player
+  checkShouldMoveRight() {
+    if (this.x + this.w < this.world.character.x) {
+      this.movingDirection = "right";
+    }
+  }
+
+  // Move the endboss in the determined direction
+  handleMovingRightOrLeft() {
+    if (this.movingDirection === "right") {
+      this.moveRight();
+      this.otherDirection = true;
+    } else {
+      this.moveLeft();
+      this.otherDirection = false;
+    }
+  }
+
+  // Start movement loop for the endboss
   move() {
     this.intervals.push(
       setInterval(() => {
         if (this.isMoving()) {
-          if (this.world.character.x + this.world.character.w < this.x) {
-            this.movingDirection = "left";
-          }
-
-          if (this.x + this.w < this.world.character.x) {
-            this.movingDirection = "right";
-          }
-
-          if (this.movingDirection === "right") {
-            this.moveRight();
-            this.otherDirection = true;
-          } else {
-            this.moveLeft();
-            this.otherDirection = false;
-          }
+          this.checkShouldMoveLeft();
+          this.checkShouldMoveRight();
+          this.handleMovingRightOrLeft();
         }
       }, 1000 / 60)
     );
+  }
+
+  // Clear all active intervals and reset interval array
+  clearAllInterval() {
+    this.intervals.forEach((id) => clearInterval(id));
+    this.intervals = [];
   }
 }

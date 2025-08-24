@@ -1,13 +1,13 @@
 class Character extends MovableObject {
   x = 100;
-  y = 100;
+  y = 200;
   w = 130;
   h = 220;
   speed = 8;
   energy = 100;
   coins = 0;
   bottles = 0;
-  canThrowBottle = true;
+  isThrowingBottle = false;
   coinsToAdded = 0;
   bottlesToAdded = 0;
   energyToRemove = 5;
@@ -82,6 +82,12 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/5_dead/D-56.png",
   ];
 
+  SLEEP_SOUND;
+  HURT_SOUND;
+  DEAD_SOUND;
+  DEAD_SOUND_PLAY_COUNT = 1;
+
+  // Constructor: initializes images, sounds, and sets up the object
   constructor() {
     super();
     this.loadImage(this.IMAGES_IDLE[0]);
@@ -89,8 +95,21 @@ class Character extends MovableObject {
     this.animate();
     this.move();
     this.applyGravity();
+    this.setSounds();
   }
 
+  // Set up the sound effects
+  setSounds() {
+    this.SLEEP_SOUND = new Audio("assets/sounds/sleeping.mp3");
+    this.SLEEP_SOUND.volume = 0.1;
+    this.HURT_SOUND = new Audio("assets/sounds/character-hurt-sound.mp3");
+    this.HURT_SOUND.volume = 0.1;
+    this.DEAD_SOUND = new Audio("assets/sounds/character-death.ogg");
+    this.DEAD_SOUND.volume = 0.1;
+    this.DEAD_SOUND.loop = false;
+  }
+
+  // Load all images for Object
   loadAllImages() {
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
@@ -100,24 +119,29 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
   }
 
+  // Assign the world reference
   setWorld(world) {
     this.world = world;
     this.coinsToAdded = 100 / this.world.level.coins.length;
     this.bottlesToAdded = 100 / this.world.level.bottles.length;
   }
 
+  // Increase coin count when a coin is collected
   getCoin() {
     this.coins += this.coinsToAdded;
   }
 
+  // Increase bottle count when a bottle is collected
   getBottle() {
     this.bottles += this.bottlesToAdded;
   }
 
+  // Check if the player is currently moving left or right
   isMoving() {
     return this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true;
   }
 
+  // Check if the player has killed an enemy by jumping on it
   isKillEnemy(mo) {
     const horizontalOverlap =
       this.x + this.w - this.offset.right > mo.x + mo.offset.left && this.x + this.offset.left < mo.x + mo.w - mo.offset.right;
@@ -126,6 +150,7 @@ class Character extends MovableObject {
     return horizontalOverlap && isPushing && !this.world.keyboard.SPACE && mo.energy > 0;
   }
 
+  // Trigger the endboss to move when player reaches the danger area
   reachToDangerArea() {
     if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea) {
       this.reachedToDangerArea = true;
@@ -133,97 +158,196 @@ class Character extends MovableObject {
     }
   }
 
-  checkCharacterIsDead(){
+  // Check if the character is dead and trigger game over after a delay
+  checkCharacterIsDead() {
     if (this.isDead()) {
       setTimeout(() => {
         this.world.gameover = true;
-      },2000);
+      }, 2000);
     }
-
   }
 
+  // Check if the character has been inactive for more than 10 seconds
   isSleeping() {
     let timePassed = new Date().getTime() - this.lastMove; //In miliseconds
     timePassed = timePassed / 1000; //In seconds
-    return timePassed > 7;
+    return timePassed > 10;
   }
 
-  // Spielt die passende Animation basierend auf Tasteneingabe und Position
+  // Play the sleep sound (if not muted) and stop hurt sound
+  playSleepSound() {
+    this.HURT_SOUND.pause();
+    if (this.world.isMute === false) {
+      this.SLEEP_SOUND.play()
+    }
+  }
+
+  // Play the hurt sound (if not muted) and stop sleep sound
+  playHurtSound() {
+    this.SLEEP_SOUND.pause();
+    if (this.world.isMute === false) {
+      this.HURT_SOUND.play()
+    }
+  }
+
+  // Play the dead sound once (if not muted) and stop other sounds
+  playDeadSound() {
+    this.SLEEP_SOUND.pause();
+    this.HURT_SOUND.pause();
+
+    if (this.DEAD_SOUND_PLAY_COUNT === 1 && this.world.isMute === false) {
+      this.DEAD_SOUND_PLAY_COUNT++;
+      this.DEAD_SOUND.play();
+    }
+  }
+
+  // Stop all character-related sounds
+  stopAllSound() {
+    this.SLEEP_SOUND.pause();
+    this.HURT_SOUND.pause();
+    this.DEAD_SOUND.pause();
+  }
+
+  // Handle character animations and corresponding sounds based on state
   animate() {
     this.intervals.push(
       setInterval(() => {
         switch (true) {
           case this.isDead():
             this.playAnimation(this.IMAGES_DEAD, true);
+            this.playDeadSound();
             break;
           case this.isHurt():
             this.playAnimation(this.IMAGES_HURT);
+            this.playHurtSound();
             break;
           case this.isAboveGround():
             this.playAnimation(this.IMAGES_JUMP);
+            this.stopAllSound();
             break;
           case this.isMoving():
             this.playAnimation(this.IMAGES_WALK);
+            this.stopAllSound();
             break;
           case this.isSleeping():
             this.playAnimation(this.IMAGES_LONG_IDLE);
+            this.playSleepSound();
             break;
           default:
             this.playAnimation(this.IMAGES_IDLE);
+            this.stopAllSound();
             break;
         }
-      }, 1000 / 10)
+      }, 1000 / 10) // Run animation updates at 10 frames per second
     );
   }
 
+  // Check if the character can move right (within game boundary)
+  // @return {boolean} true if the RIGHT key is pressed and the character has not reached the end boundary
+  canMoveRight() {
+    return this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500;
+  }
+
+  // Check if the character can move left (within game boundary)
+  // @return {boolean} true if the LEFT key is pressed and the character has not reached the start boundary
+  canMoveLeft() {
+    return this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition;
+  }
+
+  // Check if the character can jump (only if on the ground)
+  // @return {boolean} true if SPACE is pressed and the character is not above ground
+  canJump() {
+    return this.world.keyboard.SPACE === true && !this.isAboveGround();
+  }
+
+  // Check if the character can throw a bottle
+  // @return {boolean} true if ENTER is pressed, character has bottles, and is not already throwing
+  canThrowBottle() {
+    return this.world.keyboard.ENTER === true && this.bottles > 0 && !this.isThrowingBottle;
+  }
+
+  // Move the character to the right if possible
+  handleMoveRight() {
+    if (this.canMoveRight()) {
+      this.moveRight();
+      this.otherDirection = false;
+    }
+  }
+
+  // Move the character to the left if possible
+  handleMoveLeft() {
+    if (this.canMoveLeft()) {
+      this.moveLeft();
+      this.otherDirection = true;
+    }
+  }
+
+  // Make the character jump if possible
+  handleJump() {
+    if (this.canJump()) {
+      this.jump();
+    }
+  }
+
+  // Throw a bottle if possible and update game state
+  handleThrowBottle() {
+    if (this.canThrowBottle()) {
+      this.isThrowingBottle = true;
+      const throwableObject = new ThrowableObject();
+      throwableObject.throw(this.x + 50);
+      throwableObject.setWorld(this.world);
+      this.world.level.throwableObjects.push(throwableObject);
+      this.bottles -= this.bottlesToAdded;
+      this.world.level.bottleStatusBar.setPersentage(this.bottles);
+      setTimeout(() => {
+        this.isThrowingBottle = false;
+      }, 1000);
+    }
+  }
+
+  // Handle character death animation
+  handleDeath() {
+    if (this.isDead()) {
+      setTimeout(() => {
+        this.y += 10;
+      }, 1000);
+    }
+  }
+
+  // Handle character camera movement
+  handleCamera() {
+    if (this.x < this.world.level.gameEndPosition) {
+      this.world.camera = -this.x + 100;
+    }
+  }
+
+  // Character movements
   move() {
     this.intervals.push(
       setInterval(() => {
-        if (this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500) {
-          this.moveRight();
-          this.otherDirection = false;
-        }
-
-        if (this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition) {
-          this.moveLeft();
-          this.otherDirection = true;
-        }
-
-        if (this.world.keyboard.SPACE === true && !this.isAboveGround()) {
-          this.jump();
-        }
-
-        if (this.world.keyboard.ENTER === true && this.bottles > 0 && this.canThrowBottle) {
-          this.canThrowBottle = false;
-          const throwableObject = new ThrowableObject();
-          throwableObject.throw(this.x + 50);
-          throwableObject.setWorld(this.world);
-          this.world.level.throwableObjects.push(throwableObject);
-          this.bottles -= this.bottlesToAdded;
-          this.world.level.bottleStatusBar.setPersentage(this.bottles);
-          setTimeout(() => {
-            this.canThrowBottle = true;
-          }, 1000);
-        }
-
-        if (this.isDead()) {
-          setTimeout(() => {
-            this.y += 10;
-          }, 1000);
-        }
-
-        if (this.x < this.world.level.gameEndPosition) {
-          this.world.camera = -this.x + 100;
-        }
+        this.handleMoveRight();
+        this.handleMoveLeft();
+        this.handleJump();
+        this.handleThrowBottle();
+        this.handleDeath();
+        this.handleCamera();
       }, 1000 / 60)
     );
   }
 
+  // Check if any enemies are killed by the player and handle their death
   checkKillEnemy() {
     for (const enemy of this.world.level.enemies) {
-      if (this.isKillEnemy(enemy)) {
+      if (this.isKillEnemy(enemy) && enemy.energy > 0) {
         enemy.energy = 0;
+        enemy.playDeadSound();
       }
     }
+  }
+
+  // Clear all active intervals and reset the intervals array
+  clearAllInterval() {
+    this.intervals.forEach((id) => clearInterval(id));
+    this.intervals = [];
   }
 }

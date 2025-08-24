@@ -4,6 +4,8 @@ class StatusBar extends DrawableObject {
   percentage = 100;
   fixInContext = true;
 
+  // Set the status bar image based on the current percentage
+  // @param {number} percentage - Current percentage to display
   setPersentage(percentage) {
     this.percentage = percentage;
     let imageIndex = this.showStatusBarByPercentage();
@@ -11,6 +13,8 @@ class StatusBar extends DrawableObject {
     this.img = this.imageCache[imagePath];
   }
 
+  // Determine the status bar image index based on the current percentage
+  // @return {number} Index of the image to display
   showStatusBarByPercentage() {
     switch (true) {
       case this.percentage > 99:

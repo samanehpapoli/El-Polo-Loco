@@ -11,6 +11,7 @@ class HealthStatusBar extends StatusBar {
     "assets/img/7_statusbars/1_statusbar/2_statusbar_health/blue/100.png",
   ];
 
+  // Constructor: initialize the object with its images
   constructor() {
     super();
     this.loadImage(this.IMAGES[5]);

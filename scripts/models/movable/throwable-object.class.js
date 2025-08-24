@@ -29,6 +29,7 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
+  // Constructor: initialize the throwable object with rotation and splash images, and start animation
   constructor() {
     super();
     this.loadImage(this.IMAGES_ROTATE[0]);
@@ -37,10 +38,14 @@ class ThrowableObject extends MovableObject {
     this.animate();
   }
 
+  // Set the game world reference
+  // @param {Object} world - The game world object
   setWorld(world) {
     this.world = world;
   }
 
+
+  // Animate the throwable object (rotate or splash based on state)
   animate() {
     this.intervals.push(
       setInterval(() => {
@@ -53,6 +58,8 @@ class ThrowableObject extends MovableObject {
     );
   }
 
+  // Throw the object from a specific X position and apply gravity
+  // @param {number} x - Starting X position of the throw
   throw(x) {
     this.x = x;
     this.speedY = 30;
@@ -70,6 +77,7 @@ class ThrowableObject extends MovableObject {
     );
   }
 
+  // Trigger the splash animation
   splash() {
     this.isSplash = true;
   }

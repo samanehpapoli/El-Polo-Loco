@@ -1,53 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>El Polo Loco</title>
-    <link rel="stylesheet" href="./style/main.css" />
-    <script src="./scripts/models/main/world.class.js"></script>
-    <script src="./scripts/models/drawable/drawable-object.class.js"></script>
-    <script src="./scripts/models/drawable/statusbar.class.js"></script>
-    <script src="./scripts/models/drawable/health-statusbar.class.js"></script>
-    <script src="./scripts/models/drawable/coin-statusbar.class.js"></script>
-    <script src="./scripts/models/drawable/bottle-statusbar.class.js"></script>
-    <script src="./scripts/models/drawable/endboss-statusbar.class.js"></script>
-    <script src="./scripts/models/movable/movable-object.class.js"></script>
-    <script src="./scripts/models/movable/character.class.js"></script>
-    <script src="./scripts/models/movable/chicken.class.js"></script>
-    <script src="./scripts/models/movable/hen.class.js"></script>
-    <script src="./scripts/models/movable/chick.class.js"></script>
-    <script src="./scripts/models/movable/endboss.class.js"></script>
-    <script src="./scripts/models/movable/cloud.class.js"></script>
-    <script src="./scripts/models/movable/coin.class.js"></script>
-    <script src="./scripts/models/movable/throwable-object.class.js"></script>
-    <script src="./scripts/models/movable/bottle.class.js"></script>
-    <script src="./scripts/models/drawable/background.class.js"></script>
-    <script src="./scripts/models/main/keyboard.class.js"></script>
-    <script src="./scripts/models/main/level.class.js"></script>
-    <script src="./scripts/levels/parameters.js"></script>
-    <script src="./scripts/levels/backgrounds.js"></script>
-    <script src="./scripts/levels/clouds.js"></script>
-    <script src="./scripts/levels/level1.js"></script>
-    <script src="./scripts/game.js"></script>
-  </head>
-  <body onload="init()">
-    <div class="game-container">
-      <div class="start-icons" id="start-icons">
-        <div class="start-game" onclick="startNewGame()">
-          <span>Start </span>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>El Polo Loco</title>
+  <link rel="icon" type="image/x-icon" href="./assets/icon/saloon1.png">
+  <link rel="stylesheet" href="./style/main.css" />
+  <link rel="stylesheet" href="./style/responsive.css" />
+  <script src="./scripts/models/main/world.class.js"></script>
+  <script src="./scripts/models/drawable/drawable-object.class.js"></script>
+  <script src="./scripts/models/drawable/statusbar.class.js"></script>
+  <script src="./scripts/models/drawable/health-statusbar.class.js"></script>
+  <script src="./scripts/models/drawable/coin-statusbar.class.js"></script>
+  <script src="./scripts/models/drawable/bottle-statusbar.class.js"></script>
+  <script src="./scripts/models/drawable/endboss-statusbar.class.js"></script>
+  <script src="./scripts/models/movable/movable-object.class.js"></script>
+  <script src="./scripts/models/movable/character.class.js"></script>
+  <script src="./scripts/models/movable/chicken.class.js"></script>
+  <script src="./scripts/models/movable/hen.class.js"></script>
+  <script src="./scripts/models/movable/chick.class.js"></script>
+  <script src="./scripts/models/movable/endboss.class.js"></script>
+  <script src="./scripts/models/movable/cloud.class.js"></script>
+  <script src="./scripts/models/movable/coin.class.js"></script>
+  <script src="./scripts/models/movable/throwable-object.class.js"></script>
+  <script src="./scripts/models/movable/bottle.class.js"></script>
+  <script src="./scripts/models/drawable/background.class.js"></script>
+  <script src="./scripts/models/main/keyboard.class.js"></script>
+  <script src="./scripts/models/main/level.class.js"></script>
+  <script src="./scripts/levels/level-one.class.js"></script>
+  <script src="./scripts/game.js"></script>
+</head>
+
+<body onload="init()">
+  <div class="responsive-message">
+    <p>Please rotate your device</p>
+    <img src="assets/icon/rotate.png" alt="responsive">
+  </div>
+  <div class="game-container m-width" id="game-container">
+    <div class="start-icons" id="start-icons">
+      <div class="start-game" onclick="startNewGame(2000)">
+        <span>Start</span>
+      </div>
+      <div class="help" onclick="showHelpPage()">
+        <span>Help</span>
+      </div>
+      <div class="imprint" onclick="showImprintPage()">
+        <span>Imprint</span>
+      </div>
+    </div>
+    <div class="start-screen d-none" id="start-screen"></div>
+    <div class="gameover-screen d-none" id="gameover-screen">
+      <div onclick="backToMenu()">Back to Menu</div>
+      <div onclick="restartGame()">Restart Game</div>
+    </div>
+    <div class="gamewin-screen d-none" id="gamewin-screen">
+      <div onclick="backToMenu()">Back to Menu</div>
+      <div onclick="restartGame()">Restart Game</div>
+    </div>
+    <div class="help-screen d-none" id="help-screen">
+      <div class="close" onclick="hideHelpPage()">
+        <img src="./assets/icon/close.png" alt="close">
+      </div>
+      <h2>Controlls</h2>
+      <div class="buttoms">
+        <div>
+          <div class="ps-button">
+            <img src="./assets/icon/left-arrow.png" alt="left">
+          </div>
+          <span>
+            Left
+          </span>
         </div>
-        <div class="help">
-          <span>Help</span>
+
+        <div>
+          <div class="ps-button">
+            <img src="./assets/icon/right-arrow.png" alt="right">
+          </div>
+          <span>
+            Right
+          </span>
         </div>
-        <div class="imprint">
-          <span>Imprint</span>
+
+        <div>
+          <div class="ps-button">
+            <img src="./assets/icon/jump.png" alt="jump">
+          </div>
+          <span>
+            Space (Jump)
+          </span>
+        </div>
+
+        <div>
+          <div class="ps-button">
+            <img src="./assets/icon/glass-bottle.png" alt="bottle">
+          </div>
+          <span>
+            Enter (Throw Bottles)
+          </span>
         </div>
       </div>
-      <div class="start-screen d-none" id="start-screen">
-          </div>
-          <div class="gameover-screen d-none" id="gameover-screen"></div>
-      <canvas id="canvas" width="720" height="480" class="d-none"></canvas>
     </div>
-  </body>
+    <div class="imprint-screen d-none" id="imprint-screen">
+      <div class="close" onclick="hideImprintPage()">
+        <img src="./assets/icon/close.png" alt="close">
+      </div>
+      <h2>Imprint</h2>
+      <p>
+        Samaneh Papoli
+        <br>
+        Rhein str 55
+        <br>
+        55218 Ingelheim
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Telefon: [+491747906542]
+        <br>
+        E-Mail: info@samanehpapoli.com
+      </p>
+    </div>
+    <div class="game-screen d-none" id="game-screen">
+      <div class="ps-button sound" onclick="toggleMuteSound()">
+        <img src="./assets/icon/sound.png" alt="sound" id="sound-img">
+      </div>
+      <div class="touch-bottons" id="touch-buttons">
+        <div class="left">
+          <div class="ps-button" id="left-key">
+            <img src="./assets/icon/left-arrow.png" alt="left">
+          </div>
+          <div class="ps-button" id="right-key">
+            <img src="./assets/icon/right-arrow.png" alt="right">
+          </div>
+        </div>
+        <div class="right">
+          <div class="ps-button" id="throw-key">
+            <img src="./assets/icon/glass-bottle.png" alt="bottle">
+          </div>
+          <div class="ps-button" id="jump-key">
+            <img src="./assets/icon/jump.png" alt="jump">
+          </div>
+        </div>
+      </div>
+      <canvas id="canvas" width="720" height="480"></canvas>
+    </div>
+  </div>
+</body>
+
 </html>

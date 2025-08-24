@@ -11,6 +11,7 @@ class BottleStatusBar extends StatusBar {
     'assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png',
   ];
 
+  // Constructor: initialize the object with its images
   constructor() {
     super();
     this.loadImage(this.IMAGES[0]);
