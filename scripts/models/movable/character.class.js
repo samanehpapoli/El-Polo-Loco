@@ -1,18 +1,36 @@
+/**
+ * Class representing the main playable character.
+ * Extends MovableObject.
+ */
 class Character extends MovableObject {
+  /** X position of the character */
   x = 100;
+  /** Y position of the character */
   y = 200;
+  /** Width of the character */
   w = 130;
+  /** Height of the character */
   h = 220;
+  /** Movement speed */
   speed = 8;
+  /** Character's current health */
   energy = 100;
+  /** Collected coins in percentage */
   coins = 0;
+  /** Collected bottles in percentage */
   bottles = 0;
+  /** Flag indicating if the character is throwing a bottle */
   isThrowingBottle = false;
+  /** Coin increment per pickup */
   coinsToAdded = 0;
+  /** Bottle increment per pickup */
   bottlesToAdded = 0;
+  /** Energy lost per hit */
   energyToRemove = 5;
+  /** Flag indicating if the character reached the danger area */
   reachedToDangerArea = false;
 
+  /** Collision offsets for more accurate detection */
   offset = {
     right: 20,
     left: 20,
@@ -20,6 +38,7 @@ class Character extends MovableObject {
     bottom: 10,
   };
 
+  /** Idle animation images */
   IMAGES_IDLE = [
     "assets/img/2_character_pepe/1_idle/idle/I-1.png",
     "assets/img/2_character_pepe/1_idle/idle/I-2.png",
@@ -33,6 +52,7 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/idle/I-10.png",
   ];
 
+  /** Long idle animation images */
   IMAGES_LONG_IDLE = [
     "assets/img/2_character_pepe/1_idle/long_idle/I-11.png",
     "assets/img/2_character_pepe/1_idle/long_idle/I-12.png",
@@ -46,6 +66,7 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/1_idle/long_idle/I-20.png",
   ];
 
+  /** Walking animation images */
   IMAGES_WALK = [
     "assets/img/2_character_pepe/2_walk/W-21.png",
     "assets/img/2_character_pepe/2_walk/W-22.png",
@@ -55,6 +76,7 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/2_walk/W-26.png",
   ];
 
+  /** Jump animation images */
   IMAGES_JUMP = [
     "assets/img/2_character_pepe/3_jump/J-31.png",
     "assets/img/2_character_pepe/3_jump/J-32.png",
@@ -67,12 +89,14 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/3_jump/J-39.png",
   ];
 
+  /** Hurt animation images */
   IMAGES_HURT = [
     "assets/img/2_character_pepe/4_hurt/H-41.png",
     "assets/img/2_character_pepe/4_hurt/H-42.png",
     "assets/img/2_character_pepe/4_hurt/H-43.png",
   ];
 
+  /** Dead animation images */
   IMAGES_DEAD = [
     "assets/img/2_character_pepe/5_dead/D-51.png",
     "assets/img/2_character_pepe/5_dead/D-52.png",
@@ -82,12 +106,19 @@ class Character extends MovableObject {
     "assets/img/2_character_pepe/5_dead/D-56.png",
   ];
 
+  /** Sleep sound effect */
   SLEEP_SOUND;
+  /** Hurt sound effect */
   HURT_SOUND;
+  /** Death sound effect */
   DEAD_SOUND;
+  /** Counter to ensure death sound plays only once */
   DEAD_SOUND_PLAY_COUNT = 1;
 
-  // Constructor: initializes images, sounds, and sets up the object
+  /**
+   * Create a Character instance.
+   * Initializes images, sounds, animation, movement, gravity, and intervals.
+   */
   constructor() {
     super();
     this.loadImage(this.IMAGES_IDLE[0]);
@@ -98,7 +129,7 @@ class Character extends MovableObject {
     this.setSounds();
   }
 
-  // Set up the sound effects
+  /** Load and set all sound effects */
   setSounds() {
     this.SLEEP_SOUND = new Audio("assets/sounds/sleeping.mp3");
     this.SLEEP_SOUND.volume = 0.1;
@@ -109,7 +140,7 @@ class Character extends MovableObject {
     this.DEAD_SOUND.loop = false;
   }
 
-  // Load all images for Object
+  /** Load all animation image sets */
   loadAllImages() {
     this.loadImages(this.IMAGES_IDLE);
     this.loadImages(this.IMAGES_LONG_IDLE);
@@ -119,38 +150,54 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_DEAD);
   }
 
-  // Assign the world reference
+  /**
+   * Assign the world reference and calculate increments for coins/bottles.
+   * @param {World} world - The game world instance
+   */
   setWorld(world) {
     this.world = world;
     this.coinsToAdded = 100 / this.world.level.coins.length;
     this.bottlesToAdded = 100 / this.world.level.bottles.length;
   }
 
-  // Increase coin count when a coin is collected
+  /** Increase coin count */
   getCoin() {
     this.coins += this.coinsToAdded;
   }
 
-  // Increase bottle count when a bottle is collected
+  /** Increase bottle count */
   getBottle() {
     this.bottles += this.bottlesToAdded;
   }
 
-  // Check if the player is currently moving left or right
+  /** Check if the character is currently moving left or right */
   isMoving() {
-    return this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true;
+    return (
+      this.world.keyboard.RIGHT === true || this.world.keyboard.LEFT === true
+    );
   }
 
-  // Check if the player has killed an enemy by jumping on it
+  /**
+   * Check if the character can kill an enemy by jumping on it
+   * @param {MovableObject} mo - The enemy object
+   * @returns {boolean} True if the enemy can be killed
+   */
   isKillEnemy(mo) {
     const horizontalOverlap =
-      this.x + this.w - this.offset.right > mo.x + mo.offset.left && this.x + this.offset.left < mo.x + mo.w - mo.offset.right;
-    const heightDifferent = mo.y + mo.h - mo.offset.bottom - (this.y + this.h - this.offset.bottom);
+      this.x + this.w - this.offset.right > mo.x + mo.offset.left &&
+      this.x + this.offset.left < mo.x + mo.w - mo.offset.right;
+    const heightDifferent =
+      mo.y + mo.h - mo.offset.bottom - (this.y + this.h - this.offset.bottom);
     const isPushing = heightDifferent < 60 && heightDifferent > 30;
-    return horizontalOverlap && isPushing && !this.world.keyboard.SPACE && mo.energy > 0;
+    return (
+      horizontalOverlap &&
+      isPushing &&
+      !this.world.keyboard.SPACE &&
+      mo.energy > 0
+    );
   }
 
-  // Trigger the endboss to move when player reaches the danger area
+  /** Trigger endboss movement when player reaches danger area */
   reachToDangerArea() {
     if (this.x > this.world.level.gameDangerArea && !this.reachedToDangerArea) {
       this.reachedToDangerArea = true;
@@ -158,7 +205,7 @@ class Character extends MovableObject {
     }
   }
 
-  // Check if the character is dead and trigger game over after a delay
+  /** Check if the character is dead and trigger game over after delay */
   checkCharacterIsDead() {
     if (this.isDead()) {
       setTimeout(() => {
@@ -167,30 +214,33 @@ class Character extends MovableObject {
     }
   }
 
-  // Check if the character has been inactive for more than 10 seconds
+  /**
+   * Check if character has been inactive for more than 10 seconds
+   * @returns {boolean} True if character is sleeping
+   */
   isSleeping() {
     let timePassed = new Date().getTime() - this.lastMove; //In miliseconds
     timePassed = timePassed / 1000; //In seconds
     return timePassed > 10;
   }
 
-  // Play the sleep sound (if not muted) and stop hurt sound
+  /** Play sleep sound if game is not muted */
   playSleepSound() {
     this.HURT_SOUND.pause();
     if (this.world.isMute === false) {
-      this.SLEEP_SOUND.play()
+      this.SLEEP_SOUND.play();
     }
   }
 
-  // Play the hurt sound (if not muted) and stop sleep sound
+  /** Play hurt sound if game is not muted */
   playHurtSound() {
     this.SLEEP_SOUND.pause();
     if (this.world.isMute === false) {
-      this.HURT_SOUND.play()
+      this.HURT_SOUND.play();
     }
   }
 
-  // Play the dead sound once (if not muted) and stop other sounds
+  /** Play death sound once if game is not muted */
   playDeadSound() {
     this.SLEEP_SOUND.pause();
     this.HURT_SOUND.pause();
@@ -201,14 +251,14 @@ class Character extends MovableObject {
     }
   }
 
-  // Stop all character-related sounds
+  /** Stop all character-related sounds */
   stopAllSound() {
     this.SLEEP_SOUND.pause();
     this.HURT_SOUND.pause();
     this.DEAD_SOUND.pause();
   }
 
-  // Handle character animations and corresponding sounds based on state
+  /** Animate the character based on state */
   animate() {
     this.intervals.push(
       setInterval(() => {
@@ -242,31 +292,49 @@ class Character extends MovableObject {
     );
   }
 
-  // Check if the character can move right (within game boundary)
-  // @return {boolean} true if the RIGHT key is pressed and the character has not reached the end boundary
+  /**
+   * Can character move right within boundary?
+   * @returns {boolean} True if RIGHT key pressed and within limit
+   */
   canMoveRight() {
-    return this.world.keyboard.RIGHT === true && this.x < this.world.level.gameEndPosition + 500;
+    return (
+      this.world.keyboard.RIGHT === true &&
+      this.x < this.world.level.gameEndPosition + 500
+    );
   }
 
-  // Check if the character can move left (within game boundary)
-  // @return {boolean} true if the LEFT key is pressed and the character has not reached the start boundary
+  /**
+   * Can character move left within boundary?
+   * @returns {boolean} True if LEFT key pressed and within limit
+   */
   canMoveLeft() {
-    return this.world.keyboard.LEFT === true && this.x > this.world.level.gameStartPosition;
+    return (
+      this.world.keyboard.LEFT === true &&
+      this.x > this.world.level.gameStartPosition
+    );
   }
 
-  // Check if the character can jump (only if on the ground)
-  // @return {boolean} true if SPACE is pressed and the character is not above ground
+  /**
+   * Can character jump (only on ground)?
+   * @returns {boolean} True if SPACE pressed and on ground
+   */
   canJump() {
     return this.world.keyboard.SPACE === true && !this.isAboveGround();
   }
 
-  // Check if the character can throw a bottle
-  // @return {boolean} true if D is pressed, character has bottles, and is not already throwing
+  /**
+   * Can character throw a bottle?
+   * @returns {boolean} True if D pressed, bottles available, not throwing
+   */
   canThrowBottle() {
-    return this.world.keyboard.D === true && this.bottles > 0 && !this.isThrowingBottle;
+    return (
+      this.world.keyboard.D === true &&
+      this.bottles > 0 &&
+      !this.isThrowingBottle
+    );
   }
 
-  // Move the character to the right if possible
+  /** Move character to the right if possible */
   handleMoveRight() {
     if (this.canMoveRight()) {
       this.moveRight();
@@ -274,7 +342,7 @@ class Character extends MovableObject {
     }
   }
 
-  // Move the character to the left if possible
+  /** Move character to the left if possible */
   handleMoveLeft() {
     if (this.canMoveLeft()) {
       this.moveLeft();
@@ -282,14 +350,14 @@ class Character extends MovableObject {
     }
   }
 
-  // Make the character jump if possible
+  /** Make the character jump if possible  */
   handleJump() {
     if (this.canJump()) {
       this.jump();
     }
   }
 
-  // Throw a bottle if possible and update game state
+  /** Throw a bottle if possible and update game state  */
   handleThrowBottle() {
     if (this.canThrowBottle()) {
       this.isThrowingBottle = true;
@@ -305,7 +373,7 @@ class Character extends MovableObject {
     }
   }
 
-  // Handle character death animation
+  /** Handle character death animation  */
   handleDeath() {
     if (this.isDead()) {
       setTimeout(() => {
@@ -314,14 +382,14 @@ class Character extends MovableObject {
     }
   }
 
-  // Handle character camera movement
+  /** Handle character camera movement  */
   handleCamera() {
     if (this.x < this.world.level.gameEndPosition) {
       this.world.camera = -this.x + 100;
     }
   }
 
-  // Character movements
+  /** Character movements  */
   move() {
     this.intervals.push(
       setInterval(() => {
@@ -335,7 +403,7 @@ class Character extends MovableObject {
     );
   }
 
-  // Check if any enemies are killed by the player and handle their death
+  /** Check if any enemies are killed by the player and handle their death  */
   checkKillEnemy() {
     for (const enemy of this.world.level.enemies) {
       if (this.isKillEnemy(enemy) && enemy.energy > 0) {
@@ -345,7 +413,7 @@ class Character extends MovableObject {
     }
   }
 
-  // Clear all active intervals and reset the intervals array
+  /** Clear all active intervals and reset the intervals array  */
   clearAllInterval() {
     this.intervals.forEach((id) => clearInterval(id));
     this.intervals = [];

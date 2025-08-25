@@ -1,9 +1,14 @@
 class ThrowableObject extends MovableObject {
+  /** X position of the object */
   x = 400;
+  /** Y position of the object */
   y = 330;
+  /** Width of the object */
   w = 60;
+  /** Height of the object */
   h = 60;
 
+  /** Offset for collision detection */
   offset = {
     right: 0,
     left: 0,
@@ -11,8 +16,10 @@ class ThrowableObject extends MovableObject {
     bottom: 0,
   };
 
+  /** Flag to indicate if the object has splashed */
   isSplash = false;
 
+  /** Images used for rotating animation */
   IMAGES_ROTATE = [
     "assets/img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     "assets/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
@@ -20,6 +27,7 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png",
   ];
 
+  /** Images used for splash animation */
   IMAGES_SPLASH = [
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png",
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/2_bottle_splash.png",
@@ -29,7 +37,7 @@ class ThrowableObject extends MovableObject {
     "assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png",
   ];
 
-  // Constructor: initialize the throwable object with rotation and splash images, and start animation
+  /** Constructor: initialize the throwable object with rotation and splash images, and start animation */
   constructor() {
     super();
     this.loadImage(this.IMAGES_ROTATE[0]);
@@ -38,14 +46,15 @@ class ThrowableObject extends MovableObject {
     this.animate();
   }
 
-  // Set the game world reference
-  // @param {Object} world - The game world object
+  /**
+   * Set the game world reference
+   * @param {Object} world - The game world object
+   */
   setWorld(world) {
     this.world = world;
   }
 
-
-  // Animate the throwable object (rotate or splash based on state)
+  /** Animate the throwable object (rotate or splash based on state) */
   animate() {
     this.intervals.push(
       setInterval(() => {
@@ -58,8 +67,10 @@ class ThrowableObject extends MovableObject {
     );
   }
 
-  // Throw the object from a specific X position and apply gravity
-  // @param {number} x - Starting X position of the throw
+  /**
+   * Throw the object from a specific X position and apply gravity
+   * @param {number} x - Starting X position of the throw
+   */
   throw(x) {
     this.x = x;
     this.speedY = 30;
@@ -77,7 +88,7 @@ class ThrowableObject extends MovableObject {
     );
   }
 
-  // Trigger the splash animation
+  /** Trigger the splash animation */
   splash() {
     this.isSplash = true;
   }

@@ -1,16 +1,29 @@
+/** Game world object */
 let world;
+/** Canvas element for rendering the game */
 let canvas;
+/** Main game container element */
 let gameContainerElement;
+/** Start screen icons element */
 let startIconsElement;
+/** Start screen element */
 let startScreenElement;
+/** Help screen element */
 let helpScreenElement;
+/** Imprint screen element */
 let imprintScreenElement;
+/** Game screen element */
 let gameScreenElement;
+/** Game over screen element */
 let gameOverScreenElement;
+/** Game win screen element */
 let gameWinScreenElement;
+/** Keyboard input handler */
 let keyboard;
 
 // ----- Initialization -----
+
+/** Initialize the game and UI elements */
 function init() {
   canvas = document.getElementById("canvas");
   gameContainerElement = document.getElementById("game-container");
@@ -25,6 +38,12 @@ function init() {
 }
 
 // ----- Game Start / Restart -----
+
+/**
+ * Start a new game or restart an existing one
+ * @param {number} [delay=100] - Delay in ms before showing game screen
+ * @param {boolean} [restart=false] - Whether this is a restart
+ */
 function startNewGame(delay = 100, restart = false) {
   if (!restart) {
     prepareStartScreen();
@@ -37,26 +56,29 @@ function startNewGame(delay = 100, restart = false) {
   showGameScreenAfterDelay(delay);
 }
 
-// Prepare the start screen UI
+/** Prepare the start screen UI */
 function prepareStartScreen() {
   gameContainerElement.classList.add("m-width");
   startIconsElement.classList.add("d-none");
   startScreenElement.classList.remove("d-none");
 }
 
-// Prepare the back to menu screen UI
+/** Prepare the back to menu screen UI */
 function preparebackToMenuScreen() {
   gameScreenElement.classList.add("d-none");
   startIconsElement.classList.remove("d-none");
   gameContainerElement.classList.add("m-width");
 }
 
-// Initialize the world/game
+/** Initialize the game world */
 function initializeWorld() {
   world = new World(canvas, keyboard);
 }
 
-// Show game screen after a delay
+/**
+ * Show the game screen after a delay
+ * @param {number} delay - Delay in ms
+ */
 function showGameScreenAfterDelay(delay) {
   setTimeout(() => {
     startScreenElement.classList.add("d-none");
@@ -65,7 +87,7 @@ function showGameScreenAfterDelay(delay) {
   }, delay);
 }
 
-// Go back to the main menu
+/** Go back to the main menu */
 function backToMenu() {
   hideGameOverScreen();
   hideGameWinScreen();
@@ -73,7 +95,7 @@ function backToMenu() {
   preparebackToMenuScreen();
 }
 
-// Restart the game immediately
+/** Restart the game immediately */
 function restartGame() {
   hideGameOverScreen();
   hideGameWinScreen();
@@ -82,6 +104,8 @@ function restartGame() {
 }
 
 // ----- Sound Management -----
+
+/** Check the current mute status and update the game accordingly */
 function checkMuteStatus() {
   const isMuted = getMuteStatusFromStorage();
 
@@ -91,54 +115,83 @@ function checkMuteStatus() {
   updateSoundIcon();
 }
 
-// Toggle mute sound
+/** Toggle the game's mute state */
 function toggleMuteSound() {
   world.toggleBackgroundSound();
   updateSoundIcon();
   updateMuteStatusInStorage();
 }
 
-// Get mute status from localStorage
+/** Get mute status from localStorage
+ * @return {boolean} true if muted
+ */
 function getMuteStatusFromStorage() {
   return JSON.parse(localStorage.getItem("epl-mute")) === true;
 }
 
-// Mute background sound
+/** Mute the background sound */
 function muteBackgroundSound() {
   world.muteBackgroundSound();
 }
 
-// Play background sound
+/** Play the background sound */
 function playBackgroundSound() {
   world.playBackgroundSound();
 }
 
-// Update sound icon in UI
+/** Update the sound icon in the UI */
 function updateSoundIcon() {
-  const soundIcon = world.isMute ? 'mute.png' : 'sound.png';
-  document.getElementById('sound-img').setAttribute('src', `./assets/icon/${soundIcon}`);
+  const soundIcon = world.isMute ? "mute.png" : "sound.png";
+  document
+    .getElementById("sound-img")
+    .setAttribute("src", `./assets/icon/${soundIcon}`);
 }
 
-// Update localStorage for mute status
+/** Update localStorage with the current mute status */
 function updateMuteStatusInStorage() {
   const currentMute = JSON.parse(localStorage.getItem("epl-mute")) || false;
   localStorage.setItem("epl-mute", !currentMute);
 }
 
 // ----- Screen Display Helpers -----
-function showHelpPage() { helpScreenElement.classList.remove("d-none"); }
-function hideHelpPage() { helpScreenElement.classList.add("d-none"); }
 
-function showImprintPage() { imprintScreenElement.classList.remove("d-none"); }
-function hideImprintPage() { imprintScreenElement.classList.add("d-none"); }
+/** Show help page */
+function showHelpPage() {
+  helpScreenElement.classList.remove("d-none");
+}
+/** Hide help page */
+function hideHelpPage() {
+  helpScreenElement.classList.add("d-none");
+}
 
-function showGameOverScreen() { gameOverScreenElement.classList.remove("d-none"); }
-function hideGameOverScreen() { gameOverScreenElement.classList.add("d-none"); }
+/** Show imprint page */
+function showImprintPage() {
+  imprintScreenElement.classList.remove("d-none");
+}
+/** Hide imprint page */
+function hideImprintPage() {
+  imprintScreenElement.classList.add("d-none");
+}
 
-function showGameWinScreen() { gameWinScreenElement.classList.remove("d-none"); }
-function hideGameWinScreen() { gameWinScreenElement.classList.add("d-none"); }
+/** Show game over screen */
+function showGameOverScreen() {
+  gameOverScreenElement.classList.remove("d-none");
+}
+/** Hide game over screen */
+function hideGameOverScreen() {
+  gameOverScreenElement.classList.add("d-none");
+}
 
-// Show or hide touch buttons depending on device
+/** Show game win screen */
+function showGameWinScreen() {
+  gameWinScreenElement.classList.remove("d-none");
+}
+/** Hide game win screen */
+function hideGameWinScreen() {
+  gameWinScreenElement.classList.add("d-none");
+}
+
+/** Show or hide touch buttons depending on device */
 function updateTouchButtons() {
   const touchButtons = document.getElementById("touch-buttons");
   if (!touchButtons) return;

@@ -1,23 +1,57 @@
+/**
+ * Class representing the game world.
+ * Handles rendering, game logic, collision detection, sound, and animation loop.
+ */
 class World {
+  /** Canvas rendering context */
   ctx;
+
+  /** Canvas element for the game */
   canvas;
+
+  /** Current camera X offset */
   camera = 0;
+
+  /** Keyboard input handler */
   keyboard;
+
+  /** Main character of the game */
   character;
+
+  /** Current game level */
   level;
+
+  /** Array of interval IDs used in the game */
   intervals = [];
+
+  /** Current requestAnimationFrame ID */
   animationFrame;
+
+  /** Flag indicating if the game is over */
   gameover = false;
+
+  /** Flag indicating if the player has won */
   gameWin = false;
+
+  /** Flag indicating if background sound is muted */
   isMute = false;
 
+  /** Background music */
   BACKGROUND_SOUND;
+
+  /** Game over sound */
   GAMEOVER_SOUND;
+
+  /** Game win sound */
   WINGAME_SOUND;
 
-  // Constructor: Initialize the game world, main character, level, and start the game loop
-  // @param {HTMLCanvasElement} canvas - The canvas element for rendering the game
-  // @param {Keyboard} keyboard - The keyboard input handler
+  /**
+   * Create a World instance.
+   * Initializes canvas, keyboard, level, character, sounds, and starts the game loop.
+   *
+   * @param {HTMLCanvasElement} canvas - The canvas element for rendering the game.
+   * @param {Keyboard} keyboard - The keyboard input handler.
+   */
   constructor(canvas, keyboard) {
     this.canvas = canvas;
     this.keyboard = keyboard;
@@ -32,7 +66,7 @@ class World {
     this.setGameSounds();
   }
 
-  // Set the world reference for all game objects
+  /** Set the world reference for all game objects */
   setWorld() {
     this.setCharacterWorld();
     this.setEndbossWorld();
@@ -42,70 +76,62 @@ class World {
     this.setCloudsWorld();
   }
 
-  // Set world for the main character
+  /** Set world reference for the main character */
   setCharacterWorld() {
     this.character.setWorld(this);
   }
 
-  // Set world for the endboss
+  /** Set world reference for the endboss */
   setEndbossWorld() {
     this.level.endboss.setWorld(this);
   }
 
-  // Set world for all enemies
+  /** Set world reference for all enemies */
   setEnemiesWorld() {
-    for (const enemy of this.level.enemies) {
-      enemy.setWorld(this);
-    }
+    for (const enemy of this.level.enemies) enemy.setWorld(this);
   }
 
-  // Set world for all bottles
+  /** Set world reference for all bottles */
   setBottlesWorld() {
-    for (const bottle of this.level.bottles) {
-      bottle.setWorld(this);
-    }
+    for (const bottle of this.level.bottles) bottle.setWorld(this);
   }
 
-  // Set world for all coins
+  /** Set world reference for all coins */
   setCoinsWorld() {
-    for (const coin of this.level.coins) {
-      coin.setWorld(this);
-    }
+    for (const coin of this.level.coins) coin.setWorld(this);
   }
 
-  // Set world for all clouds
+  /** Set world reference for all clouds */
   setCloudsWorld() {
-    for (const cloud of this.level.clouds) {
-      cloud.setWorld(this);
-    }
+    for (const cloud of this.level.clouds) cloud.setWorld(this);
   }
 
-  // Initialize all game sounds
+  /** Initialize all game sounds */
   setGameSounds() {
     this.setBackgroundSound();
     this.setGameOverSound();
     this.setWinGameSound();
   }
 
-  // Initialize background music
+  /** Initialize background music */
   setBackgroundSound() {
     this.BACKGROUND_SOUND = new Audio("assets/sounds/background-music.mp3");
     this.BACKGROUND_SOUND.volume = 0.02;
   }
 
-  // Initialize game over sound
+  /** Initialize game over sound */
   setGameOverSound() {
     this.GAMEOVER_SOUND = new Audio("assets/sounds/game-over.mp3");
     this.GAMEOVER_SOUND.volume = 0.1;
   }
 
-  // Initialize game win sound
+  /** Initialize game win sound */
   setWinGameSound() {
     this.WINGAME_SOUND = new Audio("assets/sounds/win.mp3");
     this.WINGAME_SOUND.volume = 0.1;
   }
 
-  // Start collision detection loop for all game objects
+  /** Start collision detection loop for all game objects */
   checkCollisions() {
     this.intervals.push(
       setInterval(() => {
@@ -118,27 +144,35 @@ class World {
     );
   }
 
-  // Check collision between character and endboss
+  /** Check collision between character and endboss */
   checkCharacterEndbossCollision() {
     const endboss = this.level.endboss;
-    if (this.character.isColliding(endboss) && endboss.energy >= 0 && !this.character.isDead()) {
+    if (
+      this.character.isColliding(endboss) &&
+      endboss.energy >= 0 &&
+      !this.character.isDead()
+    ) {
       this.character.hit();
       endboss.attack();
       this.level.healthStatusBar.setPersentage(this.character.energy);
     }
   }
 
-  // Check collisions between character and all enemies
+  /** Check collisions between character and all enemies */
   checkCharacterEnemiesCollision() {
     for (const enemy of this.level.enemies) {
-      if (this.character.isColliding(enemy) && enemy.energy > 0 && !this.character.isDead()) {
+      if (
+        this.character.isColliding(enemy) &&
+        enemy.energy > 0 &&
+        !this.character.isDead()
+      ) {
         this.character.hit();
         this.level.healthStatusBar.setPersentage(this.character.energy);
       }
     }
   }
 
-  // Check collisions between character and coins
+  /** Check collisions between character and coins */
   checkCharacterCoinsCollision() {
     for (const coin of this.level.coins) {
       if (this.character.isColliding(coin) && coin.checkCoinIsNotPicked()) {
@@ -149,10 +183,13 @@ class World {
     }
   }
 
-  // Check collisions between character and bottles
+  /** Check collisions between character and bottles */
   checkCharacterBottlesCollision() {
     for (const bottle of this.level.bottles) {
-      if (this.character.isColliding(bottle) && bottle.checkBottleIsNotPicked()) {
+      if (
+        this.character.isColliding(bottle) &&
+        bottle.checkBottleIsNotPicked()
+      ) {
         this.character.getBottle();
         bottle.bottleIsPick();
         this.level.bottleStatusBar.setPersentage(this.character.bottles);
@@ -160,11 +197,14 @@ class World {
     }
   }
 
-  // Check collisions between endboss and throwable objects
+  /** Check collisions between endboss and throwable objects */
   checkEndbossThrowableCollision() {
     for (const throwableObject of this.level.throwableObjects) {
       const endboss = this.level.endboss;
-      if (endboss.isColliding(throwableObject) && throwableObject.isSplash === false) {
+      if (
+        endboss.isColliding(throwableObject) &&
+        throwableObject.isSplash === false
+      ) {
         throwableObject.splash();
         endboss.hit();
         this.level.endbossStatusBar.setPersentage(endboss.energy);
@@ -172,7 +212,7 @@ class World {
     }
   }
 
-  // Toggle the background sound on or off
+  /** Toggle the background sound on or off */
   toggleBackgroundSound() {
     if (this.isMute) {
       this.playBackgroundSound();
@@ -184,33 +224,33 @@ class World {
     }
   }
 
-  // Reset game over and game win flags
+  /** Reset game over and game win flags */
   resetGameOverAndWinStatus() {
     this.gameover = false;
     this.gameWin = false;
   }
 
-  // Mute the background sound.
+  /** Mute the background sound */
   muteBackgroundSound() {
     this.pauseBackgroundSound();
     this.isMute = true;
   }
 
-  // Play the background music.
+  /** Play the background music */
   playBackgroundSound() {
     if (this.BACKGROUND_SOUND) {
       this.BACKGROUND_SOUND.play();
     }
   }
 
-  // Pause the background music.
+  /** Pause the background music */
   pauseBackgroundSound() {
     if (this.BACKGROUND_SOUND) {
       this.BACKGROUND_SOUND.pause();
     }
   }
 
-  // Stop the background music.
+  /** Stop the background music and reset it */
   stopBackgroundSound() {
     if (this.BACKGROUND_SOUND) {
       this.BACKGROUND_SOUND.pause();
@@ -219,7 +259,7 @@ class World {
     }
   }
 
-  // Start the game over sound.
+  /** Play the game over sound */
   startGameOverSound() {
     if (this.GAMEOVER_SOUND) {
       this.GAMEOVER_SOUND.play();
@@ -228,7 +268,7 @@ class World {
     }
   }
 
-  // Start the win game sound.
+  /** Play the game win sound */
   startWinGameSound() {
     if (this.WINGAME_SOUND) {
       this.WINGAME_SOUND.play();
@@ -237,7 +277,7 @@ class World {
     }
   }
 
-  // Start the main game logic interval
+  /** Start the main game logic interval */
   gameInterval() {
     this.intervals.push(
       setInterval(() => {
@@ -249,7 +289,7 @@ class World {
     );
   }
 
-  // Main draw loop for rendering the game
+  /** Main draw loop for rendering the game */
   draw() {
     this.clearCanvas();
     this.ctx.translate(this.camera, 0);
@@ -264,17 +304,17 @@ class World {
     this.setRequestAnimationFrame();
   }
 
-  // Clear the entire canvas
+  /** Clear the entire canvas */
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  // Draw background layers
+  /** Draw background layers */
   drawBackgrounds() {
     this.addMultipleObjectToMap(this.level.backgrounds);
   }
 
-  // Draw coins, bottles, enemies, clouds, endboss, character, and throwable objects
+  /** Draw coins, bottles, enemies, clouds, endboss, character, and throwable objects */
   drawGameObjects() {
     this.addMultipleObjectToMap(this.level.coins);
     this.addMultipleObjectToMap(this.level.bottles);
@@ -285,7 +325,7 @@ class World {
     this.addMultipleObjectToMap(this.level.throwableObjects);
   }
 
-  // Draw all status bars
+  /** Draw all status bars */
   drawStatus() {
     this.addToMap(this.level.healthStatusBar);
     this.addToMap(this.level.coinStatusBar);
@@ -293,40 +333,40 @@ class World {
     this.addToMap(this.level.endbossStatusBar);
   }
 
-  // Handle rendering and sound when the game is over
+  /** Handle rendering and sound when the game is over */
   handleGameOver() {
     showGameOverScreen();
     if (!this.isMute) this.startGameOverSound();
     this.stopAllGamePlay();
   }
 
-  // Handle rendering and sound when the game is won
+  /** Handle rendering and sound when the game is won */
   handleGameWin() {
     showGameWinScreen();
     if (!this.isMute) this.startWinGameSound();
     this.stopAllGamePlay();
   }
 
-  // Request the next animation frame if the game is still running
+  /** Request the next animation frame if the game is still running */
   setRequestAnimationFrame() {
     if (!this.gameover && !this.gameWin) {
       let self = this;
-      this.animationFrame = requestAnimationFrame(() => {
-        self.draw();
-      });
+      this.animationFrame = requestAnimationFrame(() => self.draw());
     }
   }
 
-  // Add multiple game objects to the canvas
-  // @param {Array} objects - Array of objects with a draw method
+  /**
+   * Add multiple game objects to the canvas
+   * @param {Array} objects - Array of objects with a draw method
+   */
   addMultipleObjectToMap(objects) {
-    for (const object of objects) {
-      this.addToMap(object);
-    }
+    for (const object of objects) this.addToMap(object);
   }
 
-  // Draw a single object on the canvas, handling camera and flipping
-  // @param {Object} mo - The movable object to draw
+  /**
+   * Draw a single object on the canvas, handling camera and flipping
+   * @param {Object} mo - The movable object to draw
+   */
   addToMap(mo) {
     if (mo.fixInContext === true) {
       this.ctx.translate(-this.camera, 0);
@@ -344,8 +384,10 @@ class World {
     }
   }
 
-  // Flip the object horizontally if it is facing the opposite direction
-  // @param {Object} mo - The movable object to flip
+  /**
+   * Flip the object horizontally if it is facing the opposite direction
+   * @param {Object} mo - The movable object to flip
+   */
   flipImage(mo) {
     if (mo.otherDirection) {
       this.ctx.save();
@@ -355,8 +397,10 @@ class World {
     }
   }
 
-  // Restore the canvas after flipping the object
-  // @param {Object} mo - The movable object to restore
+  /**
+   * Restore the canvas after flipping the object
+   * @param {Object} mo - The movable object to restore
+   */
   flipImageBack(mo) {
     if (mo.otherDirection) {
       mo.x = mo.x * -1;
@@ -364,19 +408,17 @@ class World {
     }
   }
 
-  // Stop all ongoing gameplay: sounds, animation, and intervals
+  /** Stop all ongoing gameplay: sounds, animation, and intervals */
   stopAllGamePlay() {
     this.stopBackgroundSound();
-
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
     }
-
     this.clearAllIntervals();
   }
 
-  // Clear all intervals for the world, character, and all level objects
+  /** Clear all intervals for the world, character, and all level objects */
   clearAllIntervals() {
     this.intervals.forEach((id) => clearInterval(id));
     this.intervals = [];
