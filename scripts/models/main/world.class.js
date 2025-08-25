@@ -121,7 +121,7 @@ class World {
   // Check collision between character and endboss
   checkCharacterEndbossCollision() {
     const endboss = this.level.endboss;
-    if (this.character.isColliding(endboss) && endboss.energy > 0 && !this.character.isDead()) {
+    if (this.character.isColliding(endboss) && endboss.energy >= 0 && !this.character.isDead()) {
       this.character.hit();
       endboss.attack();
       this.level.healthStatusBar.setPersentage(this.character.energy);

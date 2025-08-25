@@ -261,9 +261,9 @@ class Character extends MovableObject {
   }
 
   // Check if the character can throw a bottle
-  // @return {boolean} true if ENTER is pressed, character has bottles, and is not already throwing
+  // @return {boolean} true if D is pressed, character has bottles, and is not already throwing
   canThrowBottle() {
-    return this.world.keyboard.ENTER === true && this.bottles > 0 && !this.isThrowingBottle;
+    return this.world.keyboard.D === true && this.bottles > 0 && !this.isThrowingBottle;
   }
 
   // Move the character to the right if possible

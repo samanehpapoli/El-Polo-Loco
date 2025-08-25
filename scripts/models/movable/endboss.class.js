@@ -80,7 +80,7 @@ class Endboss extends MovableObject {
   setWorld(world) {
     this.world = world;
     this.x = this.world.level.gameEndPosition + 300;
-    this.energyToRemove = 100 / (this.world.level.bottles.length - 2);
+    this.energyToRemove = 100 / (this.world.level.bottles.length - 5);
   }
 
   // Check if the endboss is currently moving

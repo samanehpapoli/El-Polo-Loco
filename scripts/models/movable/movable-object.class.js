@@ -53,7 +53,7 @@ class MovableObject extends DrawableObject {
   hit() {
     this.energy -= this.energyToRemove;
 
-    if (this.energy < 0) {
+    if (this.energy <= 0) {
       this.dead = true;
       this.energy = 0;
       this.currentImage = 0;

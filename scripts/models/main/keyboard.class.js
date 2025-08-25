@@ -2,7 +2,7 @@ class Keyboard {
   LEFT = false;
   RIGHT = false;
   SPACE = false;
-  ENTER = false;
+  D = false;
 
   // Constructor: initialize keyboard and touch controls
   constructor() {
@@ -25,8 +25,8 @@ class Keyboard {
       if (event.keyCode === 32) {
         this.SPACE = true;
       }
-      if (event.keyCode === 13) {
-        this.ENTER = true;
+      if (event.keyCode === 68) {
+        this.D = true;
       }
     });
   }
@@ -43,8 +43,8 @@ class Keyboard {
       if (event.keyCode === 32) {
         this.SPACE = false;
       }
-      if (event.keyCode === 13) {
-        this.ENTER = false;
+      if (event.keyCode === 68) {
+        this.D = false;
       }
     });
   }
@@ -79,11 +79,11 @@ class Keyboard {
 
     throwKey.addEventListener("touchstart", (e) => {
       e.preventDefault();
-      this.ENTER = true;
+      this.D = true;
     });
     throwKey.addEventListener("touchend", (e) => {
       e.preventDefault();
-      this.ENTER = false;
+      this.D = false;
     });
   }
 

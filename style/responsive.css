@@ -27,7 +27,7 @@
     }
 
     .game-container {
-        width: auto;
+        width: 100%;
         height: 100vh;
     }
 
@@ -48,7 +48,7 @@
     }
 }
 
-@media (max-width: 666px) {
+@media (max-width: 600px) {
     .responsive-message {
         display: flex;
     }
